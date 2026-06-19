@@ -1,0 +1,16 @@
+Options -Indexes -MultiViews
+DirectorySlash Off
+DirectoryIndex index.html
+RewriteEngine On
+
+# If real file or folder → serve normally
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Route locale paths (/ar/... or /en/...) to SPA index.html
+RewriteCond %{REQUEST_URI} ^/(ar|en)(/.*)?$
+RewriteRule ^ /index.html [L]
+
+# Default SPA fallback
+RewriteRule ^ /index.html [L]

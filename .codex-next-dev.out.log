@@ -1,0 +1,18 @@
+
+> starter-project@0.1.0 dev
+> next dev --turbopack
+
+npm.cmd :  ÔÜá Port 3000 is in use by process 34712, using available port 3001 instead.
+At line:1 char:72
++ ... -dashboard-nextjs-bm'; & npm.cmd run dev *> '.codex-next-dev.out.log'
++                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( ÔÜá Port 3000 ...t 3001 instead.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+   Ôû▓ Next.js 15.5.0 (Turbopack)
+   - Local:        http://localhost:3001
+   - Network:      http://10.2.0.2:3001
+   - Environments: .env
+
+ Ô£ô Starting...
+ Ô£ô Ready in 2.5s
