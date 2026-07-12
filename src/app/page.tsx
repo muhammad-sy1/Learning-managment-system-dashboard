@@ -12,7 +12,7 @@ export default function Page() {
     if (token) {
       router.push(`/${locale}/dashboard`);
     } else {
-      router.push(`/${locale}/login`);
+      router.push(`/${locale}`);
     }
   }, [locale, router, token]);
 

@@ -10,12 +10,12 @@ export function generateStaticParams() {
   return [{ locale: "ar" }, { locale: "en" }];
 }
 export const metadata = {
-  title: "Lista Stores",
-  description: "متجر الكتروني",
+  title: "Nibras LMS",
+  description: "Learning Management System for Teachers and Students",
   icons: {
-    icon: "/logo.svg",
-    shortcut: "/logo.svg",
-    apple: "/logo.svg",
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
   },
 };
 
@@ -54,8 +54,8 @@ export default async function LocaleLayout({
     >
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
-                <SwRegistrar />
-          
+          <SwRegistrar />
+
           <ClientShell>{children}</ClientShell>
         </NextIntlClientProvider>
       </body>

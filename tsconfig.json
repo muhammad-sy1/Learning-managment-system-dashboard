@@ -27,7 +27,9 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     ".next/types/**/*.ts",
-    "src/modules/users/components/userTable"
-, "src/modules/join-applications/types/applications.d.ts"  ],
+    "src/modules/users/components/userTable",
+    "global.d.ts",
+    "src/modules/join-applications/types/applications.d.ts"
+  ],
   "exclude": ["node_modules"]
 }

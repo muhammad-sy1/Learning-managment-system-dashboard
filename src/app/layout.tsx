@@ -8,12 +8,12 @@ type Props = {
 };
 
 export const metadata = {
-  title: "Lista Stores",
-  description: "متجر الكتروني",
+  title: "Nibras LMS",
+  description: "Learning Management System for Teachers and Students",
   icons: {
-    icon: "/logo.svg",
-    shortcut: "/logo.svg",
-    apple: "/logo.svg",
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
   },
 };
 
