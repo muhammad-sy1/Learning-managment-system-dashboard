@@ -56,15 +56,15 @@ export interface IMerchantCoPriceListPaginatedResponse<T> {
 
 export interface IGetMerchantCoPriceListResponse {
   data?:
-    | IMerchantCoPriceListData
-    | IMerchantCoPriceListItem[]
-    | IMerchantCoPriceListImage[];
+  | IMerchantCoPriceListData
+  | IMerchantCoPriceListItem[]
+  | IMerchantCoPriceListImage[];
   items?:
-    | IMerchantCoPriceListItem[]
-    | IMerchantCoPriceListPaginatedResponse<IMerchantCoPriceListItem>;
+  | IMerchantCoPriceListItem[]
+  | IMerchantCoPriceListPaginatedResponse<IMerchantCoPriceListItem>;
   images?:
-    | IMerchantCoPriceListImage[]
-    | IMerchantCoPriceListPaginatedResponse<IMerchantCoPriceListImage>;
+  | IMerchantCoPriceListImage[]
+  | IMerchantCoPriceListPaginatedResponse<IMerchantCoPriceListImage>;
 }
 
 export interface IMerchantCoPriceListItemPayload {
@@ -130,9 +130,7 @@ export interface IUser {
 }
 
 export interface IGetUserResponse {
-  data: {
-    users: IPaginatedResponse<IUser>;
-  };
+  data: IUser
 }
 
 export interface IGetUserTokenResponse {

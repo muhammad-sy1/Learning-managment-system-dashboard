@@ -199,6 +199,7 @@ export async function fetchUsersClient(
   roleFromProps?: string,
   roles?: string,
 ) {
+  console.log("fetchUsersClient called");
   try {
     const response = await fetcherClient.get<IGetUserResponse>(
       "/admin/users",
@@ -212,7 +213,8 @@ export async function fetchUsersClient(
         },
       },
     );
-    return response.data.users;
+    console.log("response.data.users", response);
+    return response;
   } catch (err) {
     throw handleApiError(err);
   }

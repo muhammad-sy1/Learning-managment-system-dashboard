@@ -39,11 +39,11 @@ import WorkingHoursContent from "./WorkingHoursContent";
 
 const UserTableActions = ({
   data,
-  permissionKey,
+  // permissionKey,
   configTranslate,
 }: {
   data: IUser;
-  permissionKey: string;
+  // permissionKey: string;
   configTranslate: Record<string, string>;
 }) => {
   const [isDownloading, setIsDownloading] = useState(false);
@@ -88,7 +88,7 @@ const UserTableActions = ({
 
   return (
     <div className="flex items-center gap-2  justify-center">
-      {canUpdate(permissionKey) && (
+      {/* {canUpdate(permissionKey) && (
         <>
           <ResponsiveModal
             trigger={
@@ -127,7 +127,7 @@ const UserTableActions = ({
             <KeyRound className="h-4 w-4" />
           )}
         </Button>
-      )}
+      )} */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="sm" className="h-8 w-8 p-0">
@@ -138,7 +138,7 @@ const UserTableActions = ({
           <DropdownMenuLabel>{t("actions")}</DropdownMenuLabel>
           <DropdownMenuSeparator />
 
-          {canUpdate(permissionKey) && (
+          {/* {canUpdate(permissionKey) && (
             <>
               <DropdownMenuItem onSelect={() => setIsUpdateRole(true)}>
                 <UserCog className="ml-2 h-4 w-4" />
@@ -220,9 +220,9 @@ const UserTableActions = ({
                 <span>{t("downloadProductForMerchant")}</span>
               </DropdownMenuItem>
             </>
-          )}
+          )} */}
 
-          {canDelete(permissionKey) && (
+          {/* {canDelete(permissionKey) && (
             <>
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -246,7 +246,7 @@ const UserTableActions = ({
                 />
               </DropdownMenuItem>
             </>
-          )}
+          )} */}
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -280,7 +280,7 @@ const UserTableActions = ({
         />
       </ResponsiveModal>
 
-      {permissionKey === "merchants" && (
+      {/* {permissionKey === "merchants" && (
         <>
           <ResponsiveModal
             title={t("workingHours.title")}
@@ -310,7 +310,7 @@ const UserTableActions = ({
             />
           </ResponsiveModal>
         </>
-      )}
+      )} */}
     </div>
   );
 };

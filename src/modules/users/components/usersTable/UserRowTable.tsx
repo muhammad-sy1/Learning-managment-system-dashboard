@@ -4,7 +4,7 @@ import { formatUtcToLocal } from "@/utils/formatDate";
 import { useTranslations } from "next-intl";
 import UserTableActions from "./UserTableActions";
 import { IUser } from "../../types/users";
-import { permissionType } from "./UserTable";
+// import { permissionType } from "./UserTable";
 import NavLink from "@/components/NavLink";
 import { Badge } from "@/components/ui/badge";
 
@@ -19,15 +19,16 @@ function getRoleKey(data: IUser): RoleKey {
 
 export default function UserRowTable({
   data,
-  permissionKey,
+  // permissionKey,
   configTranslate,
 }: {
   data: IUser;
-  permissionKey: permissionType;
+  // permissionKey: permissionType;
   configTranslate: Record<string, string>;
 }) {
+  
   const t = useTranslations("users");
-
+  
   const roleConfig: Record<
     RoleKey,
     {
@@ -53,13 +54,14 @@ export default function UserRowTable({
       variant: "outline",
     },
   };
+  console.log("asdfsddddddddddddddddddddddddddj", data);
   return (
     <>
       <TableCell className=" py-3">{data.id}</TableCell>
       <TableCell>
         <UserTableActions
           data={data}
-          permissionKey={permissionKey}
+          // permissionKey={permissionKey}
           configTranslate={configTranslate}
         />
       </TableCell>
@@ -71,18 +73,18 @@ export default function UserRowTable({
               alt={data.first_name ?? "User image"}
               className="h-10 w-10 rounded-full"
             />
-            {permissionKey === "merchants" && (
+            {/* {permissionKey === "merchants" && (
               <>
                 <span
                   className={`rounded-full size-3.5 top-0 -start-1 ${data.is_open ? "bg-green-500" : "bg-red-500"} absolute`}
                 ></span>
               </>
-            )}
+            )} */}
           </div>
         </div>
       </TableCell>
 
-      {permissionKey === "merchants" && (
+      {/* {permissionKey === "merchants" && (
         <TableCell className="font-medium gap-3">
           <div className="flex justify-center w-25 items-center">
             <div className="relative rounded-full ">
@@ -94,7 +96,7 @@ export default function UserRowTable({
             </div>
           </div>
         </TableCell>
-      )}
+      )} */}
 
       <TableCell>
         <span className="truncate">{data.first_name}</span>
@@ -104,7 +106,7 @@ export default function UserRowTable({
       <TableCell>{data.email}</TableCell>
 
       {/* <TableCell>{data.bio ?? "-"}</TableCell> */}
-
+{/* 
       {permissionKey === "merchants" && (
         <>
           <TableCell>{data.store_name ?? <span>-</span>}</TableCell>
@@ -173,7 +175,7 @@ export default function UserRowTable({
             )}
           </TableCell>
         </>
-      )}
+      )} */}
 
       <TableCell>
         {data.blocked_at ? (

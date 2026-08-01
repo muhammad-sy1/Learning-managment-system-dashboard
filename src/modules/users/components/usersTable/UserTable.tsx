@@ -30,13 +30,13 @@ import { useGetUsers } from "../../hooks/useGetUsers";
 import AddUserForm from "./AddUserForm";
 import UserRowTable from "./UserRowTable";
 
-export type permissionType =
-  | "merchants"
-  | "clients"
-  | "admins"
-  | "delivery"
-  | "students"
-  | "instructors";
+// export type permissionType =
+//   | "merchants"
+//   | "clients"
+//   | "admins"
+//   | "delivery"
+//   | "students"
+//   | "instructors";
 
 function UserTable({
   roleFromProps,
@@ -62,13 +62,15 @@ function UserTable({
     effectiveIsInstructor,
   );
 
+  console.log("asdfsddddddddddddddddddddddddddj", users);
+
   const tClient = useTranslations("Dashboard.USERS.customerManagement");
   const tAdmins = useTranslations("Dashboard.USERS.adminManagement");
   const tStudent = useTranslations("Dashboard.USERS.studentManagement");
   const tInstructor = useTranslations("Dashboard.USERS.instructorManagement");
   const tHeaders = useTranslations("Dashboard.tableHeaders");
 
-  const { canCreate } = usePermissionStore();
+  // const { canCreate } = usePermissionStore();
 
   const roleConfig: Record<
     string,
@@ -77,7 +79,7 @@ function UserTable({
       createLabel: string;
       description: string;
       caption: string;
-      permission: permissionType;
+      // permission: permissionType;
       status: string;
       blocked: string;
       unblocked: string;
@@ -96,7 +98,7 @@ function UserTable({
     }
   > = {
     STUDENT: {
-      permission: "clients",
+      // permission: "clients",
       title: tStudent("title"),
       status: tStudent("status"),
       blocked: tStudent("blocked"),
@@ -118,7 +120,7 @@ function UserTable({
       openWebsiteMissingConfig: tStudent("openWebsiteMissingConfig"),
     },
     CLIENT: {
-      permission: "clients",
+      // permission: "clients",
       title: tClient("title"),
       status: tClient("status"),
       blocked: tClient("blocked"),
@@ -140,7 +142,7 @@ function UserTable({
       openWebsiteMissingConfig: tClient("openWebsiteMissingConfig"),
     },
     INSTRUCTOR: {
-      permission: "merchants",
+      // permission: "merchants",
       title: tInstructor("title"),
       status: tInstructor("status"),
       blocked: tInstructor("blocked"),
@@ -159,7 +161,7 @@ function UserTable({
       deleteBtn: tInstructor("deleteBtn"),
     },
     ADMIN: {
-      permission: "admins",
+      // permission: "admins",
       EditUser: tAdmins("EditUser"),
       isUpdateRoleOpen: tAdmins("isUpdateRoleOpen"),
       title: tAdmins("title"),
@@ -353,12 +355,10 @@ function UserTable({
           actionButton={
             <ResponsiveModal
               trigger={
-                canCreate(config?.permission ?? "") ? (
-                  <Button variant="premium">
-                    <UserPlus className="mr-2 h-4 w-4" />
-                    <span>{config?.createLabel}</span>
-                  </Button>
-                ) : null
+                <Button variant="premium">
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  <span>{config?.createLabel}</span>
+                </Button>
               }
               title={config?.createLabel}
               description={config?.description}
@@ -391,7 +391,7 @@ function UserTable({
             <UserRowTable
               key={user.id}
               data={user}
-              permissionKey={config!.permission}
+              // permissionKey={config!.permission}
               configTranslate={config || {}}
             />
           )}

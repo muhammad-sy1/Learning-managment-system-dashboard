@@ -82,13 +82,13 @@ export function SidebarRoutes(): MenuItem[] {
           icon: Shield,
           searchParams: { role: "ADMIN", page: "1" },
         },
-        {
-          id: "users-carts",
-          href: "/dashboard/users-carts",
-          label: t("navigation.usersCarts"),
-          icon: ShoppingCart,
-          searchParams: { page: "1" },
-        },
+        // {
+        //   id: "users-carts",
+        //   href: "/dashboard/users-carts",
+        //   label: t("navigation.usersCarts"),
+        //   icon: ShoppingCart,
+        //   searchParams: { page: "1" },
+        // },
       ],
     },
     {
