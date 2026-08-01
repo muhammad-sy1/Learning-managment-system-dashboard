@@ -40,7 +40,7 @@ const dashboardStats = [
 
 export default function LandingPage() {
   return (
-    <section className="relative overflow-hidden bg-[#050816] text-white">
+    <section className="relative overflow-hidden bg-[#050816] text-white xl:h-screen">
       {/* Background Glow */}
       <div className="absolute inset-0">
         <div className="absolute left-1/2 top-1/2 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-lime-400/10 blur-[180px]" />

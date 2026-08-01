@@ -195,13 +195,13 @@ function normalizeCoPriceListImages(raw: unknown): IMerchantCoPriceListImage[] {
 }
 
 export async function fetchUsersClient(
-  filters: UserFiltersSchema,
+  filters: UserFiltersSchema & { is_instructor?: number },
   roleFromProps?: string,
   roles?: string,
 ) {
   try {
     const response = await fetcherClient.get<IGetUserResponse>(
-      endpoints.getUsers,
+      "/admin/users",
       {
         params: {
           ...filters,

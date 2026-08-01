@@ -144,7 +144,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               {open && (
                 <h2 className="flex items-center gap-1.5 text-xl font-bold tracking-tight truncate group">
                   <span className="text-gray-800 dark:text-gray-100 font-extrabold">
-                    Lista Stores
+                    Nibras
                   </span>
                 </h2>
               )}

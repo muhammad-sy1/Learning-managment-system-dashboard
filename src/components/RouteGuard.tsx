@@ -97,13 +97,13 @@ export const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
     }
   }, [accessStatus.shouldRedirect, router]);
 
-  if (accessStatus.isLoading || !hasHydrated) {
-    return <Loading />;
-  }
+  // if (accessStatus.isLoading || !hasHydrated) {
+  //   return <Loading />;
+  // }
 
-  if (accessStatus.shouldRedirect && token) {
-    return <Loading />;
-  }
+  // if (accessStatus.shouldRedirect && token) {
+  //   return <Loading />;
+  // }
 
   return <>{children}</>;
 };

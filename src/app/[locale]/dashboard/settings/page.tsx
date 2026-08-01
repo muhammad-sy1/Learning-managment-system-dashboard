@@ -1,12 +1,12 @@
 import { StatsGrid } from '@/modules/home/components/StatsGrid'
 import React from 'react'
 
-const StatsticsPage = () => {
+const SettingsPage = () => {
   return (
     <div>
-        <StatsGrid/>
+      <StatsGrid />
     </div>
-  )
-}
+  );
+};
 
-export default StatsticsPage
+export default SettingsPage

@@ -63,8 +63,8 @@
   "Auth": {
     "login": {
       "title": "Log in to",
-      "subtitle": "Lista Stores Dashboard",
-      "companyName": "Lista Stores",
+      "subtitle": "Nibras Dashboard",
+      "companyName": "Nibras",
       "emailPlaceholder": "Email",
       "loginsuccess": "login successfully",
       "passwordPlaceholder": "Password",
@@ -94,6 +94,31 @@
       "backToLogin": "Back to Login",
       "resendCode": "Resend Code",
       "otp_email_sent": "Verification code has been sent to your email"
+    },
+    "register": {
+      "title": "Register to",
+      "subtitle": "Nibras Dashboard",
+      "companyName": "Nibras",
+      "firstNamePlaceholder": "First Name",
+      "lastNamePlaceholder": "Last Name",
+      "emailPlaceholder": "Email",
+      "phonePlaceholder": "Phone Number (Optional)",
+      "passwordPlaceholder": "Password",
+      "passwordConfirmPlaceholder": "Confirm Password",
+      "registerButton": "Register",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Login here",
+      "registrationSuccess": "Registration successful! Please check your email to verify your account."
+    },
+    "verifyEmail": {
+      "title": "Verify Email 📧",
+      "verifying": "Verifying your email...",
+      "success": "Email verified successfully!",
+      "error": "Email verification failed. The link may have expired.",
+      "invalidLink": "Invalid or expired verification link.",
+      "backToLogin": "Back to Login",
+      "backToRegister": "Back to Register",
+      "resendEmail": "Resend Verification Email"
     }
   },
   "Dashboard": {
@@ -184,6 +209,47 @@
         "topVisitors": "Top Visitors by Requests",
         "leaderboard": "Leaderboard",
         "noEmail": "No email"
+      },
+      "overview": {
+        "title": "Admin Dashboard",
+        "description": "High-level platform statistics for students, instructors, courses, enrollments, and revenue.",
+        "loadError": "Unable to load dashboard statistics. Please try again.",
+        "retry": "Retry",
+        "empty": "No dashboard statistics available.",
+        "summary": {
+          "totalStudents": "Students",
+          "newStudentsThisMonth": "{count} new students this month",
+          "totalInstructors": "Instructors",
+          "pendingInstructors": "{count} pending instructor approvals",
+          "totalCourses": "Courses",
+          "courseStatusHint": "Status counts are updated in real time",
+          "totalRevenue": "Total Revenue",
+          "revenueHint": "Platform revenue in local currency"
+        },
+        "usersSection": {
+          "title": "User insights",
+          "description": "Student growth and instructor approvals",
+          "newThisMonth": "New students this month",
+          "pendingInstructors": "Pending instructor approvals",
+          "label": "Students",
+          "approvals": "Approvals"
+        },
+        "coursesSection": {
+          "title": "Course pipeline",
+          "description": "Published and pending course statuses",
+          "published": "Published",
+          "pending": "Pending review",
+          "draft": "Draft",
+          "rejected": "Rejected"
+        },
+        "enrollmentsSection": {
+          "title": "Enrollments",
+          "description": "Active enrollments and monthly new signups",
+          "total": "Active enrollments",
+          "active": "Active",
+          "newThisMonth": "New enrollments this month",
+          "monthly": "Monthly"
+        }
       }
     },
     "UsersCartsPage": {
@@ -211,6 +277,30 @@
       }
     },
     "USERS": {
+      "studentManagement": {
+        "title": "Student Management",
+        "status": "student status",
+        "isUpdateRoleOpen": "update user role",
+        "blocked": "blocked",
+        "unblocked": " unblocked",
+        "block": "block",
+        "unblock": "unblock ",
+        "description": "Manage student accounts and information",
+        "tableCaption": "List of all students in the system with their details and actions",
+        "serverTableCaption": "List of all students in the system with their details",
+        "usersCount": "Students",
+        "createNewUser": "Create New Student",
+        "EditUser": "edit Student",
+        "create": "Student created successfully",
+        "updated": "Student updated successfully",
+        "update": "update",
+        "delete": "Student deleted successfully",
+        "deleteBtn": "delete student",
+        "openWebsiteAsUser": "Open website as student",
+        "openWebsiteError": "Failed to open website as student",
+        "openWebsiteMissingConfig": "Website URL is not configured",
+        "createUserDescription": "Fill in the information below to create a new student account"
+      },
       "customerManagement": {
         "title": "Customer Management",
         "status": "status customer ",
@@ -218,7 +308,7 @@
         "blocked": "blocked",
         "unblocked": " unblocked",
         "block": "block",
-        "unblock": "unblock ",
+        "unblock": "unblock",
         "description": "Manage customer accounts and information",
         "tableCaption": "List of all customers in the system with their details and actions",
         "serverTableCaption": "List of all customers in the system with their details",
@@ -353,6 +443,30 @@
           "imageAlt": "Custom order price list image",
           "imageLabel": "Image {index}"
         }
+      },
+      "instructorManagement": {
+        "title": "Instructor Management",
+        "status": "instructor status",
+        "isUpdateRoleOpen": "update user role",
+        "blocked": "blocked",
+        "unblocked": " unblocked",
+        "block": "block",
+        "unblock": "unblock",
+        "description": "Manage instructor accounts and permissions",
+        "tableCaption": "List of all instructors in the system with their details and actions",
+        "serverTableCaption": "List of all instructors in the system with their details",
+        "usersCount": "Instructors",
+        "createNewUser": "Create New Instructor",
+        "EditUser": "edit Instructor",
+        "create": "Instructor created successfully",
+        "updated": "Instructor updated successfully",
+        "update": "update",
+        "delete": "Instructor deleted successfully",
+        "deleteBtn": "delete instructor",
+        "openWebsiteAsUser": "Open website as instructor",
+        "openWebsiteError": "Failed to open website as instructor",
+        "openWebsiteMissingConfig": "Website URL is not configured",
+        "createUserDescription": "Fill in the information below to create a new instructor account"
       },
       "UsersValidation": {
         "first_name": {
@@ -901,10 +1015,6 @@
       "fields": {
         "is_company_sponsored": "Is this coupon sponsored by the company?",
         "noMinimum": "No minimum",
-        "percentage": "Percentage",
-        "fixed": "Fixed",
-        "active": "Active",
-        "expired": "Expired",
         "shipping": "Shipping",
         "products": "Products",
         "categories": "Categories",
@@ -1861,15 +1971,21 @@
       "home": "Home",
       "users": "Users",
       "zones": "zones",
-      "statsics": "statsics",
+      "analytics": "Analytics",
+      "courses": "Courses",
+      "settings": "Settings",
       "info": "info",
       "titleMyOrders": "My Orders Banners ",
       "titleFavorite": "Favorite Banners",
+      "students": "Students",
+      "instructors": "Instructors",
       "clients": "customers",
       "usersCarts": "Users Carts",
       "usersSSR": "Users SSR",
       "delivery": "delivery",
       "merchants": "merchants",
+      "admins": "Admins",
+      "admin": "admin",
       "provinces": "zones",
       "sections": "sections",
       "subsection": "sub sections",
@@ -1894,6 +2010,8 @@
   "permessions": {
     "userPermessions": "User Permissions",
     "pages": {
+      "students": "Students",
+      "instructors": "Instructors",
       "clients": "Clients",
       "merchants": "Merchants",
       "favorite-banners": "Favorite Banners",
@@ -1951,8 +2069,8 @@
     }
   },
   "Logo": {
-    "companyName": "Lista Stores",
-    "dashboard": "Lista Stores Dashboard"
+    "companyName": "Nibras",
+    "dashboard": "Nibras Dashboard"
   },
   "UserDropdown": {
     "visitProfile": "Visit my profile",
@@ -2038,7 +2156,8 @@
       "invalid": "Please enter a valid password",
       "requiredAll": "To change your password, please fill in all password fields",
       "required": "Password must be between 8 to 50 characters",
-      "noSpaces": "Password cannot contain spaces"
+      "noSpaces": "Password cannot contain spaces",
+      "mismatch": "Passwords do not match"
     },
     "otp": {
       "type": "OTP must be only digits",

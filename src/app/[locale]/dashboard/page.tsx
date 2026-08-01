@@ -12,7 +12,6 @@
 //     setIsVisible(true);
 //   }, []);
 
-
 //   return (
 //     <div className="relative w-full min-h-screen overflow-x-hidden overflow-y-auto bg-gradient-to-br from-white via-orange-50/30 to-white dark:from-black dark:via-gray-950 dark:to-black">
 //       {/* Animated Background Elements - Orange Theme */}
@@ -149,8 +148,8 @@
 import { Analysis } from "@/modules/analysis/components/analysis";
 
 export default function HomePage() {
-
   return (
     <Analysis />
+    // <></>
   );
 }

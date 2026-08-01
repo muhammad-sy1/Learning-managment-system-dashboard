@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 
 type UseTableQueryOptions<TData> = {
   queryKey: (string | number | Record<string, string | string[]> | undefined)[];
-  fetchFn: (params: Record<string, any>) => Promise<TData>;
+  fetchFn: (params: Record<string, unknown>) => Promise<TData>;
   options?: Omit<UseQueryOptions<TData>, "queryKey" | "queryFn">;
 };
 

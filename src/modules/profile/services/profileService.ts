@@ -5,8 +5,9 @@ import fetcherClient from "@/lib/api/fetcher/client";
 export async function getProfile() {
   try {
     const response = await fetcherClient.get<IApiResponse<IProfile>>(
-      endpoints.getProfile
+      "user"
     );
+    // console.log("response.data"+response.data)
     return response.data;
   } catch (err) {
     throw handleApiError(err);

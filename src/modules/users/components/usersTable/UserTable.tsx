@@ -27,24 +27,45 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { MdManageAccounts } from "react-icons/md";
 import { useGetUsers } from "../../hooks/useGetUsers";
-import { UserFilters } from "../../types/users";
 import AddUserForm from "./AddUserForm";
 import UserRowTable from "./UserRowTable";
 
-export type permissionType = "merchants" | "clients" | "admins" | "delivery";
+export type permissionType =
+  | "merchants"
+  | "clients"
+  | "admins"
+  | "delivery"
+  | "students"
+  | "instructors";
 
-function UserTable() {
+function UserTable({
+  roleFromProps,
+  isInstructor,
+}: {
+  roleFromProps?: string;
+  isInstructor?: boolean;
+}) {
   const [addUserModalOpen, setAddUserModalOpen] = useState(false);
   const searchParams = useSearchParams();
 
-  const role = searchParams.get("role") as UserFilters["role"];
+  const rawQueryRole = searchParams.get("role");
+  const queryRole = rawQueryRole?.toUpperCase();
+  const queryIsInstructor = searchParams.get("is_instructor") === "1";
+  const effectiveIsInstructor = isInstructor || queryIsInstructor;
+  const role =
+    (roleFromProps ? roleFromProps.toUpperCase() : queryRole) || undefined;
 
-  const { data: users, isPending } = useGetUsers();
+  const shouldPassRoleFromProps = roleFromProps;
+
+  const { data: users, isPending } = useGetUsers(
+    shouldPassRoleFromProps ? role : undefined,
+    effectiveIsInstructor,
+  );
 
   const tClient = useTranslations("Dashboard.USERS.customerManagement");
   const tAdmins = useTranslations("Dashboard.USERS.adminManagement");
-  const tDriver = useTranslations("Dashboard.USERS.driverManagement");
-  const tMerchant = useTranslations("Dashboard.USERS.merchantManagement");
+  const tStudent = useTranslations("Dashboard.USERS.studentManagement");
+  const tInstructor = useTranslations("Dashboard.USERS.instructorManagement");
   const tHeaders = useTranslations("Dashboard.tableHeaders");
 
   const { canCreate } = usePermissionStore();
@@ -74,24 +95,27 @@ function UserTable() {
       openWebsiteMissingConfig?: string;
     }
   > = {
-    MERCHANT: {
-      permission: "merchants",
-      title: tMerchant("title"),
-      isUpdateRoleOpen: tMerchant("isUpdateRoleOpen"),
-      createLabel: tMerchant("createNewUser"),
-      description: tMerchant("createUserDescription"),
-      caption: tMerchant("tableCaption"),
-      EditUser: tMerchant("EditUser"),
-      status: tMerchant("status"),
-      blocked: tMerchant("blocked"),
-      unblocked: tMerchant("unblocked"),
-      block: tMerchant("block"),
-      unblock: tMerchant("unblock"),
-      create: tMerchant("create"),
-      update: tMerchant("updated"),
-      delete: tMerchant("delete"),
-      updateBtn: tMerchant("update"),
-      deleteBtn: tMerchant("deleteBtn"),
+    STUDENT: {
+      permission: "clients",
+      title: tStudent("title"),
+      status: tStudent("status"),
+      blocked: tStudent("blocked"),
+      isUpdateRoleOpen: tStudent("isUpdateRoleOpen"),
+      unblocked: tStudent("unblocked"),
+      block: tStudent("block"),
+      unblock: tStudent("unblock"),
+      createLabel: tStudent("createNewUser"),
+      description: tStudent("createUserDescription"),
+      caption: tStudent("tableCaption"),
+      EditUser: tStudent("EditUser"),
+      create: tStudent("create"),
+      update: tStudent("updated"),
+      delete: tStudent("delete"),
+      updateBtn: tStudent("update"),
+      deleteBtn: tStudent("deleteBtn"),
+      openWebsiteAsUser: tStudent("openWebsiteAsUser"),
+      openWebsiteError: tStudent("openWebsiteError"),
+      openWebsiteMissingConfig: tStudent("openWebsiteMissingConfig"),
     },
     CLIENT: {
       permission: "clients",
@@ -115,6 +139,25 @@ function UserTable() {
       openWebsiteError: tClient("openWebsiteError"),
       openWebsiteMissingConfig: tClient("openWebsiteMissingConfig"),
     },
+    INSTRUCTOR: {
+      permission: "merchants",
+      title: tInstructor("title"),
+      status: tInstructor("status"),
+      blocked: tInstructor("blocked"),
+      isUpdateRoleOpen: tInstructor("isUpdateRoleOpen"),
+      unblocked: tInstructor("unblocked"),
+      block: tInstructor("block"),
+      unblock: tInstructor("unblock"),
+      createLabel: tInstructor("createNewUser"),
+      description: tInstructor("createUserDescription"),
+      caption: tInstructor("tableCaption"),
+      EditUser: tInstructor("EditUser"),
+      create: tInstructor("create"),
+      update: tInstructor("updated"),
+      delete: tInstructor("delete"),
+      updateBtn: tInstructor("update"),
+      deleteBtn: tInstructor("deleteBtn"),
+    },
     ADMIN: {
       permission: "admins",
       EditUser: tAdmins("EditUser"),
@@ -134,28 +177,26 @@ function UserTable() {
       updateBtn: tAdmins("update"),
       deleteBtn: tAdmins("deleteBtn"),
     },
-    DELIVERY: {
-      permission: "delivery",
-      title: tDriver("title"),
-      isUpdateRoleOpen: tDriver("isUpdateRoleOpen"),
-      status: tDriver("status"),
-      blocked: tDriver("blocked"),
-      unblocked: tDriver("unblocked"),
-      block: tDriver("block"),
-      unblock: tDriver("unblock"),
-      createLabel: tDriver("createNewUser"),
-      description: tDriver("createUserDescription"),
-      EditUser: tDriver("EditUser"),
-      caption: tDriver("tableCaption"),
-      create: tDriver("create"),
-      update: tDriver("updated"),
-      updateBtn: tDriver("update"),
-      delete: tDriver("delete"),
-      deleteBtn: tDriver("deleteBtn"),
-    },
   };
 
-  const config = role ? roleConfig[role] : undefined;
+  // Map our app roles to the existing roleConfig keys to reuse translations and behavior
+  const mappedKey = (() => {
+    const lowerRole =
+      roleFromProps?.toLowerCase() ||
+      role?.toLowerCase() ||
+      (effectiveIsInstructor ? "instructor" : undefined);
+
+    if (lowerRole === "student" || lowerRole === "client") return "STUDENT";
+    if (lowerRole === "instructor") return "INSTRUCTOR";
+    if (lowerRole === "admin") return "ADMIN";
+    if (effectiveIsInstructor) return "INSTRUCTOR";
+    if (lowerRole === "delivery") return "DELIVERY";
+    if (lowerRole === "merchant") return "MERCHANT";
+
+    return role as string | undefined;
+  })();
+
+  const config = mappedKey ? roleConfig[mappedKey] : undefined;
 
   const headerIcons = {
     ordersTotalIncome: Truck,

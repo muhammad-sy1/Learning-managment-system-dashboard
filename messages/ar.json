@@ -102,6 +102,31 @@
       "backToLogin": "العودة لتسجيل الدخول",
       "resendCode": "إعادة إرسال الرمز",
       "otp_email_sent": "تم إرسال رمز التحقق إلى بريدك الإلكتروني"
+    },
+    "register": {
+      "title": "إنشاء حساب في",
+      "subtitle": "لوحة تحكم Nibras",
+      "companyName": "Nibras",
+      "firstNamePlaceholder": "الاسم الأول",
+      "lastNamePlaceholder": "اسم العائلة",
+      "emailPlaceholder": "البريد الإلكتروني",
+      "phonePlaceholder": "رقم الهاتف (اختياري)",
+      "passwordPlaceholder": "كلمة المرور",
+      "passwordConfirmPlaceholder": "تأكيد كلمة المرور",
+      "registerButton": "إنشاء حساب",
+      "haveAccount": "هل لديك حساب بالفعل؟",
+      "loginLink": "تسجيل الدخول هنا",
+      "registrationSuccess": "تم التسجيل بنجاح! يرجى التحقق من بريدك الإلكتروني لتفعيل حسابك."
+    },
+    "verifyEmail": {
+      "title": "التحقق من البريد الإلكتروني 📧",
+      "verifying": "جاري التحقق من بريدك الإلكتروني...",
+      "success": "تم التحقق من البريد الإلكتروني بنجاح!",
+      "error": "فشل التحقق من البريد الإلكتروني. قد يكون الرابط انتهت صلاحيته.",
+      "invalidLink": "رابط التحقق غير صحيح أو انتهت صلاحيته.",
+      "backToLogin": "العودة لتسجيل الدخول",
+      "backToRegister": "العودة للتسجيل",
+      "resendEmail": "إعادة إرسال رسالة التحقق"
     }
   },
   "Dashboard": {
@@ -192,6 +217,47 @@
         "topVisitors": "أكثر الزوار طلباً",
         "leaderboard": "لوحة الصدارة",
         "noEmail": "لا يوجد بريد إلكتروني"
+      },
+      "overview": {
+        "title": "لوحة تحكم المسؤول",
+        "description": "إحصائيات عامة عن الطلاب والمعلمين والمقررات والتسجيلات والإيرادات.",
+        "loadError": "تعذر تحميل إحصائيات لوحة التحكم. يرجى المحاولة مرة أخرى.",
+        "retry": "إعادة المحاولة",
+        "empty": "لا تتوفر إحصائيات للوحة التحكم.",
+        "summary": {
+          "totalStudents": "الطلاب",
+          "newStudentsThisMonth": "{count} طالب جديد هذا الشهر",
+          "totalInstructors": "المعلمين",
+          "pendingInstructors": "{count} طلبات مدرسين قيد الانتظار",
+          "totalCourses": "المقررات",
+          "courseStatusHint": "يتم تحديث حالة المقررات في الوقت الفعلي",
+          "totalRevenue": "إجمالي الإيرادات",
+          "revenueHint": "إيرادات المنصة بالعملة المحلية"
+        },
+        "usersSection": {
+          "title": "معلومات المستخدمين",
+          "description": "نمو الطلاب وموافقات المعلمين",
+          "newThisMonth": "الطلاب الجدد هذا الشهر",
+          "pendingInstructors": "طلبات المعلمين قيد الانتظار",
+          "label": "الطلاب",
+          "approvals": "الموافقات"
+        },
+        "coursesSection": {
+          "title": "حالة المقررات",
+          "description": "حالة المقررات المنشورة والقيد المراجعة",
+          "published": "منشورة",
+          "pending": "قيد المراجعة",
+          "draft": "مسودة",
+          "rejected": "مرفوضة"
+        },
+        "enrollmentsSection": {
+          "title": "التسجيلات",
+          "description": "التسجيلات النشطة والنمو الشهري",
+          "total": "التسجيلات النشطة",
+          "active": "نشطة",
+          "newThisMonth": "تسجيلات جديدة هذا الشهر",
+          "monthly": "شهرياً"
+        }
       }
     },
     "UsersCartsPage": {
@@ -219,6 +285,30 @@
       }
     },
     "USERS": {
+      "studentManagement": {
+        "title": "إدارة الطلاب",
+        "isUpdateRoleOpen": "تعديل دور مستخدم",
+        "description": "إدارة حسابات الطلاب ومعلوماتهم",
+        "tableCaption": "قائمة جميع الطلاب في النظام مع تفاصيلهم والإجراءات",
+        "serverTableCaption": "قائمة جميع الطلاب في النظام مع تفاصيلهم",
+        "usersCount": "الطلاب",
+        "update": "تحديث",
+        "status": "حالة الطالب",
+        "blocked": "محظور",
+        "unblocked": "غير محظور",
+        "block": "حظر",
+        "unblock": "فك الحظر",
+        "createNewUser": "إنشاء طالب جديد",
+        "EditUser": "تعديل طالب",
+        "create": "تم إنشاء الطالب بنجاح",
+        "updated": "تم تحديث الطالب بنجاح",
+        "delete": "تم حذف الطالب بنجاح",
+        "deleteBtn": "حذف الطالب",
+        "openWebsiteAsUser": "فتح الموقع كطالب",
+        "openWebsiteError": "فشل فتح الموقع كطالب",
+        "openWebsiteMissingConfig": "رابط الموقع غير مهيأ",
+        "createUserDescription": "املأ المعلومات أدناه لإنشاء حساب طالب جديد"
+      },
       "customerManagement": {
         "title": "إدارة الزبائن",
         "isUpdateRoleOpen": "تعديل دور مستخدم",
@@ -409,6 +499,29 @@
           "imageAlt": "صورة لائحة أسعار الطلبات المخصصة",
           "imageLabel": "الصورة {index}"
         }
+      },
+      "instructorManagement": {
+        "title": "إدارة المعلمين",
+        "status": "حالة المعلم",
+        "isUpdateRoleOpen": "تعديل دور مستخدم",
+        "blocked": "محظور",
+        "unblocked": "غير محظور",
+        "block": "حظر",
+        "unblock": "فك الحظر",
+        "description": "إدارة حسابات المعلمين وصلاحياتهم",
+        "tableCaption": "قائمة جميع المعلمين في النظام مع تفاصيلهم والإجراءات",
+        "serverTableCaption": "قائمة جميع المعلمين في النظام مع تفاصيلهم",
+        "usersCount": "المعلمين",
+        "createNewUser": "إنشاء معلم جديد",
+        "EditUser": "تعديل معلم",
+        "create": "تم إنشاء المعلم بنجاح",
+        "updated": "تم تحديث المعلم بنجاح",
+        "delete": "تم حذف المعلم بنجاح",
+        "deleteBtn": "حذف المعلم",
+        "openWebsiteAsUser": "فتح الموقع كمعلم",
+        "openWebsiteError": "فشل فتح الموقع كمعلم",
+        "openWebsiteMissingConfig": "رابط الموقع غير مهيأ",
+        "createUserDescription": "املأ المعلومات أدناه لإنشاء حساب معلم جديد"
       },
       "adminManagement": {
         "title": "إدارة المشرفيين",
@@ -2084,6 +2197,8 @@
       "zones": "المناطق",
       "statsics": "الإحصائيات",
       "info": "المعلومات العامة",
+      "students": "الطلاب",
+      "instructors": "المعلمين",
       "clients": "الزبائن",
       "usersCarts": "سلات المستخدمين",
       "titleMyOrders": "بانرات طلباتي",
@@ -2091,6 +2206,8 @@
       "usersSSR": "المستخدمين SSR",
       "delivery": "عمال التوصيل",
       "merchants": "التجار",
+      "admins": "المشرفين",
+      "admin": "المشرفين",
       "provinces": "المناطق",
       "sections": "الأقسام الرئيسية",
       "subsection": "الأقسام الفرعية",
@@ -2120,6 +2237,8 @@
   "permessions": {
     "userPermessions": "صلاحيات المستخدم",
     "pages": {
+      "students": "الطلاب",
+      "instructors": "المعلمين",
       "clients": "الزبائن",
       "favorite-banners": "بانرات المفضلة",
       "finance": "المالية",
@@ -2265,7 +2384,8 @@
       "invalid": "من فضلك أدخل كلمة مرور صالحة",
       "requiredAll": "لتغيير كلمة المرور، يرجى ملء جميع حقول كلمة المرور",
       "required": "يجب أن تكون كلمة المرور بين 8 إلى 50 حرفًا",
-      "noSpaces": "كلمة المرور لا يمكن أن تحتوي على مسافات"
+      "noSpaces": "كلمة المرور لا يمكن أن تحتوي على مسافات",
+      "mismatch": "كلمات المرور غير متطابقة"
     },
     "otp": {
       "type": "من فضلك أدخل رمز التحقق",

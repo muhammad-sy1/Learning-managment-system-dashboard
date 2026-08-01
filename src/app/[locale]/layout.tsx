@@ -54,9 +54,11 @@ export default async function LocaleLayout({
     >
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <SwRegistrar />
+          {/* <SwRegistrar /> */}
 
-          <ClientShell>{children}</ClientShell>
+          <ClientShell>
+            {children}
+          </ClientShell>
         </NextIntlClientProvider>
       </body>
     </html>

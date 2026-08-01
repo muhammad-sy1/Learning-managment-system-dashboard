@@ -31,3 +31,33 @@ interface IForgotPasswordResponse {
 interface ICheckVerificationCodeResponse {
   is_valid: boolean;
 }
+
+interface IRegisterPayload {
+  full_name?: string;
+  first_name?: string;
+  last_name?: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+  phone_number?: string;
+}
+
+interface IRegisterResponse {
+  user: IUser;
+  token: string;
+}
+
+interface IVerifyEmailPayload {
+  id: string | number;
+  hash: string;
+}
+
+interface IResendVerificationPayload {
+  email: string;
+}
+
+interface IApiResponse<T = any> {
+  data?: T;
+  message?: string;
+  status?: string;
+}

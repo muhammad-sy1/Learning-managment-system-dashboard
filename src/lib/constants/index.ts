@@ -6,6 +6,8 @@ export const ROUTE_PERMISSIONS_MAP: Record<string, string[]> = {
   statstics: ["statstics.view"],
 
   //users
+  students: ["clients.view"],
+  instructors: ["merchants.view"],
   clients: ["clients.view"],
   "users-carts": ["clients.view"],
   merchants: ["merchants.view"],

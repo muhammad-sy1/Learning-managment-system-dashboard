@@ -7,7 +7,7 @@ import Loading from "./[locale]/dashboard/loading";
 export default function Page() {
   const router = useRouter();
   const token = Cookies.get("token");
-  const locale = Cookies.get("locale") ?? "ar";
+  const locale = Cookies.get("locale") ?? "en";
   useEffect(() => {
     if (token) {
       router.push(`/${locale}/dashboard`);

@@ -3,16 +3,27 @@ import { loginSchema } from "../schemas/loginSchema";
 import { forgotPasswordSchema } from "../schemas/forgotPasswordSchema";
 import { verifyCodeSchema } from "../schemas/verifyCodeSchema";
 import { resetPasswordSchema } from "../schemas/resetPasswordSchema";
-import endpoints from "@/lib/api/endPoints";
-import fetcherClient from "@/lib/api/fetcher/client";
+import { authFetcherClient } from "@/lib/api/fetcher/client";
 import useNotificationsStore from "@/store/useNotificationsStore";
+
+const authEndpoints = {
+  login: "/login",
+  logout: "/logout",
+  sendVerifyCode: "/send/verification-code",
+  checkVerificationCode: "/check/verification",
+  resetPassword: "/reset-password",
+  register: "/register",
+  getUser: "/user",
+  verifyEmail: (id: string | number, hash: string) => `/verify-email/${id}/${hash}`,
+  resendVerification: "/resend-verification",
+};
 
 export async function loginService(data: loginSchema) {
   try {
-    const fcmToken = useNotificationsStore.getState().fcmToken; // جلب token من Zustand
+    const fcmToken = useNotificationsStore.getState().fcmToken;
 
-    const response = await fetcherClient.post<IApiResponse<ILoginResponse>>(
-      endpoints.login,
+    const response = await authFetcherClient.post<IApiResponse<ILoginResponse>>(
+      authEndpoints.login,
       { ...data, fcm_token: fcmToken }
     );
     return response.data;
@@ -20,14 +31,15 @@ export async function loginService(data: loginSchema) {
     throw handleApiError(err);
   }
 }
+
 export async function logoutService() {
   try {
-    const response = await fetcherClient.post<
+    const response = await authFetcherClient.post<
       IApiResponse<{
         message: string;
       }>
-    >(endpoints.logout);
-    return response.data;
+    >(authEndpoints.logout);
+    return response;
   } catch (err) {
     throw handleApiError(err);
   }
@@ -35,11 +47,11 @@ export async function logoutService() {
 
 export async function sendVerificationCode(data: forgotPasswordSchema) {
   try {
-    const response = await fetcherClient.post<IApiResponse<IForgotPasswordResponse>>(
-      endpoints.sendVerifyCode,
+    const response = await authFetcherClient.post<IApiResponse<IForgotPasswordResponse>>(
+      authEndpoints.sendVerifyCode,
       data
     );
-    return response.data;
+    return response;
   } catch (error) {
     throw handleApiError(error);
   }
@@ -47,10 +59,10 @@ export async function sendVerificationCode(data: forgotPasswordSchema) {
 
 export async function checkVerificationCode(data: verifyCodeSchema) {
   try {
-    const response = await fetcherClient.post<
+    const response = await authFetcherClient.post<
       IApiResponse<ICheckVerificationCodeResponse>
-    >(endpoints.checkVerificationCode, data);
-    return response.data;
+    >(authEndpoints.checkVerificationCode, data);
+    return response;
   } catch (error) {
     throw handleApiError(error);
   }
@@ -60,9 +72,64 @@ export async function resetPassword(
   data: resetPasswordSchema & verifyCodeSchema
 ) {
   try {
-    const response = await fetcherClient.post(endpoints.resetPassword, data);
+    const response = await authFetcherClient.post(
+      authEndpoints.resetPassword,
+      data
+    );
     return response;
   } catch (error) {
     throw handleApiError(error);
+  }
+}
+
+export async function registerService(data: IRegisterPayload) {
+  try {
+    const fcmToken = useNotificationsStore.getState().fcmToken;
+    const response = await authFetcherClient.post<IApiResponse<IRegisterResponse>>(
+      authEndpoints.register,
+      { ...data, fcm_token: fcmToken }
+    );
+    return response.data;
+  } catch (err) {
+    throw handleApiError(err);
+  }
+}
+
+export async function getCurrentUser() {
+  try {
+    const response = await authFetcherClient.get<IApiResponse<IUser>>(
+      authEndpoints.getUser
+    );
+    return response.data;
+  } catch (err) {
+    throw handleApiError(err);
+  }
+}
+
+export async function verifyEmailService(
+  id: string | number,
+  hash: string
+) {
+  try {
+    const response = await authFetcherClient.get<IApiResponse<{ message: string }>>(
+      authEndpoints.verifyEmail(id, hash)
+    );
+    return response.data;
+  } catch (err) {
+    throw handleApiError(err);
+  }
+}
+
+export async function resendVerificationService(
+  data: IResendVerificationPayload
+) {
+  try {
+    const response = await authFetcherClient.post<IApiResponse<{ message: string }>>(
+      authEndpoints.resendVerification,
+      data
+    );
+    return response.data;
+  } catch (err) {
+    throw handleApiError(err);
   }
 }

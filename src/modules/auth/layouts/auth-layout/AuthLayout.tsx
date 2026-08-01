@@ -1,4 +1,4 @@
-import Logo from "@/../public/logo.svg";
+import Logo from "@/../public/logo.png";
 import Image from "next/image";
 export default function AuthLayout({
   children,
@@ -22,7 +22,7 @@ export default function AuthLayout({
               lg:max-w-[min(800px,max(500px,calc((100vw_-_500px)/2)))] 
               lg:max-h-[min(800px,max(500px,calc((100vw_-_500px)/2)))]
               p-1 dark:p-2 dark:lg:p-4 
-                rounded-full `}
+                rounded-full dark:bg-indigo-950 `}
           alt="logo"
         />
       </div>

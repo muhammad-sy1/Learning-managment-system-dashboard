@@ -1,24 +1,26 @@
 import { ROUTE_PERMISSIONS_MAP } from "@/lib/constants";
-import useAuth from "@/modules/auth/store/authStore";
+// import useAuth from "@/modules/auth/store/authStore";
 import {
-  Activity,
-  Folder,
-  FolderOpen,
-  Headphones,
+  // Activity,
+  BookOpen,
+  // Folder,
+  // FolderOpen,
+  // Headphones,
   Home,
-  Images,
-  InfoIcon,
-  Layers,
-  MapPin,
-  MessageSquare,
-  Package,
-  Paperclip,
+  // Images,
+  // InfoIcon,
+  // Layers,
+  // MapPin,
+  // MessageSquare,
+  // Package,
+  // Paperclip,
+  Settings,
   Shield,
   ShoppingCart,
-  Star,
+  Signal,
+  // Star,
   Store,
-  Tag,
-  Truck,
+  // Tag,
   User,
   Users,
 } from "lucide-react";
@@ -30,9 +32,9 @@ import { usePermissionStore } from "@/hooks/usePermissionStore";
 export function SidebarRoutes(): MenuItem[] {
   const t = useTranslations("Sidebar");
   const hasPermission = usePermissionStore((state) => state.hasPermission);
-  const user = useAuth((state) => state?.user);
-  const isSuperAdmin =
-    Array.isArray(user?.roles) && user.roles[0] === "SUPER_ADMIN";
+  // const user = useAuth((state) => state?.user);
+  // const isSuperAdmin =
+  //   Array.isArray(user?.roles) && user.roles[0] === "SUPER_ADMIN";
 
   const routes: MenuItem[] = [
     // Home
@@ -42,10 +44,15 @@ export function SidebarRoutes(): MenuItem[] {
       icon: Home,
     },
     {
-      id: "statstics",
-      href: "/dashboard/statstics",
-      label: t("navigation.statsics"),
-      icon: Activity,
+      // id: "analytics",
+      href: "/dashboard/analytics",
+      label: t("navigation.analytics"),
+      icon: Signal,
+    },
+    {
+      href: "/dashboard/courses",
+      label: t("navigation.courses"),
+      icon: BookOpen,
     },
 
     // Users
@@ -55,11 +62,25 @@ export function SidebarRoutes(): MenuItem[] {
       menuType: "users",
       children: [
         {
-          id: "clients",
+          id: "students",
           href: "/dashboard/users",
-          label: t("navigation.clients"),
+          label: t("navigation.students"),
           icon: User,
-          searchParams: { role: "CLIENT", page: "1" },
+          searchParams: { role: "STUDENT", page: "1" },
+        },
+        {
+          id: "instructors",
+          href: "/dashboard/users",
+          label: t("navigation.instructors"),
+          icon: Store,
+          searchParams: { is_instructor: "1", role: "STUDENT", page: "1" },
+        },
+        {
+          id: "admins",
+          href: "/dashboard/users",
+          label: t("navigation.admins"),
+          icon: Shield,
+          searchParams: { role: "ADMIN", page: "1" },
         },
         {
           id: "users-carts",
@@ -68,218 +89,203 @@ export function SidebarRoutes(): MenuItem[] {
           icon: ShoppingCart,
           searchParams: { page: "1" },
         },
-        {
-          id: "merchants",
-          href: "/dashboard/users",
-          label: t("navigation.merchants"),
-          icon: Store,
-          searchParams: { role: "MERCHANT", page: "1" },
-        },
-        {
-          id: "delivery",
-          href: "/dashboard/users",
-          label: t("navigation.delivery"),
-          icon: Truck,
-          searchParams: { role: "DELIVERY", page: "1" },
-        },
-        {
-          id: "admins",
-          href: "/dashboard/users",
-          label: t("navigation.admin"),
-          icon: Shield,
-          searchParams: { role: "ADMIN", page: "1" },
-        },
       ],
     },
-
-    // Provinces
     {
-      id: "zones",
-      href: "/dashboard/zones",
-      label: t("navigation.zones"),
-      icon: MapPin,
+      href: "/dashboard/settings",
+      label: t("navigation.settings"),
+      icon: Settings,
     },
 
-    // Coupons
-    {
-      id: "coupons",
-      href: "/dashboard/coupons",
-      label: t("navigation.coupons"),
-      icon: Tag,
-    },
+    // // Provinces
+    // {
+    //   id: "zones",
+    //   href: "/dashboard/zones",
+    //   label: t("navigation.zones"),
+    //   icon: MapPin,
+    // },
 
-    // Sections group
-    {
-      label: t("navigation.sectionsGroup"),
-      icon: Layers,
-      menuType: "sections-group",
-      children: [
-        {
-          id: "sections",
-          href: "/dashboard/sections",
-          label: t("navigation.sections"),
-          icon: Folder,
-        },
-        {
-          id: "merchant-categories",
-          href: "/dashboard/merchants-categories",
-          label: t("navigation.merchantCategories"),
-          icon: Store,
-        },
-        {
-          id: "sub-sections",
-          href: "/dashboard/sub-section",
-          label: t("navigation.subsection"),
-          icon: FolderOpen,
-        },
-      ],
-    },
+    // // Coupons
+    // {
+    //   id: "coupons",
+    //   href: "/dashboard/coupons",
+    //   label: t("navigation.coupons"),
+    //   icon: Tag,
+    // },
 
-    // Banners
-    {
-      label: t("navigation.banners"),
-      icon: Images,
-      menuType: "banners-group",
-      children: [
-        {
-          id: "main-banners",
-          href: "/dashboard/banners",
-          label: t("navigation.mainbanners"),
-          icon: Images,
-          searchParams: { type: "HOME_SLIDER" },
-        },
-        {
-          id: "secondary-banners",
-          href: "/dashboard/banners",
-          label: t("navigation.secondaryBanners"),
-          icon: Images,
-          searchParams: { type: "HOME" },
-        },
-        {
-          id: "favorite-banners",
-          href: "/dashboard/banners",
-          label: t("navigation.titleFavorite"),
-          icon: Images,
-          searchParams: { type: "FAVORITE" },
-        },
-        {
-          id: "my-orders-banners",
-          href: "/dashboard/banners",
-          label: t("navigation.titleMyOrders"),
-          icon: Images,
-          searchParams: { type: "MY_ORDERS" },
-        },
-      ],
-    },
+    // // Sections group
+    // {
+    //   label: t("navigation.sectionsGroup"),
+    //   icon: Layers,
+    //   menuType: "sections-group",
+    //   children: [
+    //     {
+    //       id: "sections",
+    //       href: "/dashboard/sections",
+    //       label: t("navigation.sections"),
+    //       icon: Folder,
+    //     },
+    //     {
+    //       id: "merchant-categories",
+    //       href: "/dashboard/merchants-categories",
+    //       label: t("navigation.merchantCategories"),
+    //       icon: Store,
+    //     },
+    //     {
+    //       id: "sub-sections",
+    //       href: "/dashboard/sub-section",
+    //       label: t("navigation.subsection"),
+    //       icon: FolderOpen,
+    //     },
+    //   ],
+    // },
 
-    // Products
-    {
-      id: "products",
-      href: "/dashboard/products",
-      label: t("navigation.products"),
-      icon: Package,
-    },
+    // // Banners
+    // {
+    //   label: t("navigation.banners"),
+    //   icon: Images,
+    //   menuType: "banners-group",
+    //   children: [
+    //     {
+    //       id: "main-banners",
+    //       href: "/dashboard/banners",
+    //       label: t("navigation.mainbanners"),
+    //       icon: Images,
+    //       searchParams: { type: "HOME_SLIDER" },
+    //     },
+    //     {
+    //       id: "secondary-banners",
+    //       href: "/dashboard/banners",
+    //       label: t("navigation.secondaryBanners"),
+    //       icon: Images,
+    //       searchParams: { type: "HOME" },
+    //     },
+    //     {
+    //       id: "favorite-banners",
+    //       href: "/dashboard/banners",
+    //       label: t("navigation.titleFavorite"),
+    //       icon: Images,
+    //       searchParams: { type: "FAVORITE" },
+    //     },
+    //     {
+    //       id: "my-orders-banners",
+    //       href: "/dashboard/banners",
+    //       label: t("navigation.titleMyOrders"),
+    //       icon: Images,
+    //       searchParams: { type: "MY_ORDERS" },
+    //     },
+    //   ],
+    // },
 
-    // Finance
-    {
-      label: t("navigation.fainance"),
-      icon: Layers,
-      menuType: "fainance-group",
-      children: [
-        {
-          id: "finance",
-          href: "/dashboard/finance",
-          label: t("navigation.mainfainance"),
-          icon: Folder,
-        },
-        {
-          id: "sub-finance",
-          href: "/dashboard/sub-finance",
-          label: t("navigation.Subfainance"),
-          icon: FolderOpen,
-        },
-        {
-          id: "transactions",
-          href: "/dashboard/transactions",
-          label: t("navigation.transactions"),
-          icon: FolderOpen,
-        },
-      ],
-    },
+    // // Products
+    // {
+    //   id: "products",
+    //   href: "/dashboard/products",
+    //   label: t("navigation.products"),
+    //   icon: Package,
+    // },
 
-    // Orders
+    // // Finance
+    // {
+    //   label: t("navigation.fainance"),
+    //   icon: Layers,
+    //   menuType: "fainance-group",
+    //   children: [
+    //     {
+    //       id: "finance",
+    //       href: "/dashboard/finance",
+    //       label: t("navigation.mainfainance"),
+    //       icon: Folder,
+    //     },
+    //     {
+    //       id: "sub-finance",
+    //       href: "/dashboard/sub-finance",
+    //       label: t("navigation.Subfainance"),
+    //       icon: FolderOpen,
+    //     },
+    //     {
+    //       id: "transactions",
+    //       href: "/dashboard/transactions",
+    //       label: t("navigation.transactions"),
+    //       icon: FolderOpen,
+    //     },
+    //   ],
+    // },
 
-    {
-      label: t("navigation.ordersSection"),
-      icon: Layers,
-      menuType: "orders-group",
-      children: [
-        {
-          id: "orders-restaurant-market",
-          href: "/dashboard/orders?types=RESTURANT,MARKET",
-          label: t("navigation.restaurantMarketsOrders"),
-          icon: ShoppingCart,
-        },
-        {
-          id: "orders-custom",
-          href: "/dashboard/orders?types=CUSTOM",
-          label: t("navigation.customOrders"),
-          icon: ShoppingCart,
-        },
-      ],
-    },
+    // // Orders
 
-    // Join Orders
-    {
-      label: t("navigation.joinApplications"),
-      icon: Paperclip,
-      menuType: "join-applications-group",
-      children: [
-        {
-          id: "join-applications-delivery",
-          href: "/dashboard/join-applications?type=delivery",
-          label: t("navigation.deliveryApplications"),
-          icon: ShoppingCart,
-        },
-        {
-          id: "join-applications-partner",
-          href: "/dashboard/join-applications?type=partner",
-          label: t("navigation.partnersApplications"),
-          icon: ShoppingCart,
-        },
-      ],
-    },
+    // {
+    //   label: t("navigation.ordersSection"),
+    //   icon: Layers,
+    //   menuType: "orders-group",
+    //   children: [
+    //     {
+    //       id: "orders-restaurant-market",
+    //       href: "/dashboard/orders?types=RESTURANT,MARKET",
+    //       label: t("navigation.restaurantMarketsOrders"),
+    //       icon: ShoppingCart,
+    //     },
+    //     {
+    //       id: "orders-custom",
+    //       href: "/dashboard/orders?types=CUSTOM",
+    //       label: t("navigation.customOrders"),
+    //       icon: ShoppingCart,
+    //     },
+    //   ],
+    // },
 
-    {
-      id: "settings",
-      href: "/dashboard/info",
-      label: t("navigation.info"),
-      icon: InfoIcon,
-    },
+    // // Join Orders
+    // {
+    //   label: t("navigation.joinApplications"),
+    //   icon: Paperclip,
+    //   menuType: "join-applications-group",
+    //   children: [
+    //     {
+    //       id: "join-applications-delivery",
+    //       href: "/dashboard/join-applications?type=delivery",
+    //       label: t("navigation.deliveryApplications"),
+    //       icon: ShoppingCart,
+    //     },
+    //     {
+    //       id: "join-applications-partner",
+    //       href: "/dashboard/join-applications?type=partner",
+    //       label: t("navigation.partnersApplications"),
+    //       icon: ShoppingCart,
+    //     },
+    //   ],
+    // },
 
-    // Support
-    {
-      label: t("navigation.support"),
-      icon: Headphones,
-      menuType: "support-group",
-      children: [
-        {
-          id: "chats",
-          href: "/dashboard/chats",
-          label: t("navigation.chats"),
-          icon: MessageSquare,
-        },
-        {
-          id: "chat-ratings",
-          href: "/dashboard/chats/ratings",
-          label: t("navigation.ratings"),
-          icon: Star,
-        },
-      ],
-    },
+    // {
+    //   id: "settings",
+    //   href: "/dashboard/info",
+    //   label: t("navigation.info"),
+    //   icon: InfoIcon,
+    // },
+
+    // // Support
+    // {
+    //   label: t("navigation.support"),
+    //   icon: Headphones,
+    //   menuType: "support-group",
+    //   children: [
+    //     {
+    //       id: "chats",
+    //       href: "/dashboard/chats",
+    //       label: t("navigation.chats"),
+    //       icon: MessageSquare,
+    //     },
+    //     {
+    //       id: "chat-ratings",
+    //       href: "/dashboard/chats/ratings",
+    //       label: t("navigation.ratings"),
+    //       icon: Star,
+    //     },
+    //   ],
+    // },
   ];
 
-  if (isSuperAdmin) {
+  //  if (isSuperAdmin) {
+  if (5 > 3) {
     return routes;
   }
 
