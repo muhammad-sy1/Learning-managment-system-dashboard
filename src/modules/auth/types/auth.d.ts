@@ -1,4 +1,4 @@
-type TRoles = "SUPER_ADMIN" | "ADMIN" | "CLIENT" | "MERCHANT" | "DELIVERY";
+type TRoles = "admin" | "student";
 
 interface IUser {
   id: number;
@@ -9,12 +9,12 @@ interface IUser {
   country_code?: string;
   first_name: string;
   last_name: string;
-  roles: string[];
+  role: TRoles;
   blocked_at: string | null;
-
+  
   last_seen_in_days: null;
   permissions: string[];
-  roles: string[];
+  is_instructor: boolean;
 }
 
 interface ILoginResponse {

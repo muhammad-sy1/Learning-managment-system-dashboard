@@ -27,7 +27,7 @@ export const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
   const { data: profile, isPending, fetchStatus, isFetching } = useGetProfile();
 
   const isPublicRoute = PUBLIC_ROUTES.some((route) =>
-    pathname.startsWith(route)
+    pathname.startsWith(route),
   );
 
   const accessStatus = useMemo(() => {
@@ -49,15 +49,10 @@ export const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
 
     if (profile) {
       const userPermissions = profile.user.permissions ?? [];
-      const userRole = profile.user.roles?.[0];
-
-      if (userRole === "SUPER_ADMIN") {
-        return { canAccess: true, shouldRedirect: null, isLoading: false };
-      }
 
       const canAccess = PermissionsUtil.canAccessRoute(
         pathname,
-        userPermissions
+        userPermissions,
       );
       if (!canAccess) {
         return {

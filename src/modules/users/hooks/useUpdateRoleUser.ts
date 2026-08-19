@@ -14,15 +14,12 @@ export default function useUpdateRoleUser({
 }) {
   return useMutation({
     mutationFn: ({
-      id,
       userData,
     }: {
-      id: number | string;
       userData: Partial<editRoleUserSchema>;
     }) => {
       const formData = jsonToFormData(userData);
-      formData.append("_method", "PUT");
-      return updateUser(id, formData);
+      return updateUser(formData);
     },
     onSuccess: () => {
       toast.success(configTranslate.update);

@@ -29,13 +29,7 @@ export const usePermissionStore = create<PermissionsState>((set, get) => ({
   clear: () => set({ user: null, permissions: [] }),
 
   hasPermission: (permission) => {
-    const { permissions, user } = get();
-    const isSuperAdmin =
-      Array.isArray(user?.roles) && user.roles[0] === "SUPER_ADMIN";
-
-    if (isSuperAdmin) return true;
-
-    return PermissionsUtil.hasAnyPermission(permissions, permission);
+    return PermissionsUtil.hasAnyPermission(get().permissions, permission);
   },
 
   canView: (resource) => get().hasPermission(`${resource}.view`),
@@ -48,12 +42,6 @@ export const usePermissionStore = create<PermissionsState>((set, get) => ({
     get().hasPermission(`${resource}.manageStatus`),
 
   canAccess: (route) => {
-    const { permissions, user } = get();
-    const isSuperAdmin =
-      Array.isArray(user?.roles) && user.roles[0] === "SUPER_ADMIN";
-
-    if (isSuperAdmin) return true;
-
-    return PermissionsUtil.canAccessRoute(route, permissions);
+    return PermissionsUtil.canAccessRoute(route, get().permissions);
   },
 }));

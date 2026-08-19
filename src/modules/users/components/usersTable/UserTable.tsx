@@ -3,7 +3,6 @@ import { ResponsiveModal } from "@/components/ResponsiveModal";
 import ReusableTable from "@/components/reusable-table/ReusableTable";
 import ReusableTooltip from "@/components/ReusableTooltip";
 import { Button } from "@/components/ui/button";
-import { usePermissionStore } from "@/hooks/usePermissionStore";
 import {
   BadgePercent,
   BookIcon,
@@ -30,14 +29,6 @@ import { useGetUsers } from "../../hooks/useGetUsers";
 import AddUserForm from "./AddUserForm";
 import UserRowTable from "./UserRowTable";
 
-// export type permissionType =
-//   | "merchants"
-//   | "clients"
-//   | "admins"
-//   | "delivery"
-//   | "students"
-//   | "instructors";
-
 function UserTable({
   roleFromProps,
   isInstructor,
@@ -62,15 +53,10 @@ function UserTable({
     effectiveIsInstructor,
   );
 
-  console.log("asdfsddddddddddddddddddddddddddj", users);
-
-  const tClient = useTranslations("Dashboard.USERS.customerManagement");
   const tAdmins = useTranslations("Dashboard.USERS.adminManagement");
   const tStudent = useTranslations("Dashboard.USERS.studentManagement");
   const tInstructor = useTranslations("Dashboard.USERS.instructorManagement");
   const tHeaders = useTranslations("Dashboard.tableHeaders");
-
-  // const { canCreate } = usePermissionStore();
 
   const roleConfig: Record<
     string,
@@ -119,28 +105,6 @@ function UserTable({
       openWebsiteError: tStudent("openWebsiteError"),
       openWebsiteMissingConfig: tStudent("openWebsiteMissingConfig"),
     },
-    CLIENT: {
-      // permission: "clients",
-      title: tClient("title"),
-      status: tClient("status"),
-      blocked: tClient("blocked"),
-      isUpdateRoleOpen: tClient("isUpdateRoleOpen"),
-      unblocked: tClient("unblocked"),
-      block: tClient("block"),
-      unblock: tClient("unblock"),
-      createLabel: tClient("createNewUser"),
-      description: tClient("createUserDescription"),
-      caption: tClient("tableCaption"),
-      EditUser: tClient("EditUser"),
-      create: tClient("create"),
-      update: tClient("updated"),
-      delete: tClient("delete"),
-      updateBtn: tClient("update"),
-      deleteBtn: tClient("deleteBtn"),
-      openWebsiteAsUser: tClient("openWebsiteAsUser"),
-      openWebsiteError: tClient("openWebsiteError"),
-      openWebsiteMissingConfig: tClient("openWebsiteMissingConfig"),
-    },
     INSTRUCTOR: {
       // permission: "merchants",
       title: tInstructor("title"),
@@ -181,19 +145,15 @@ function UserTable({
     },
   };
 
-  // Map our app roles to the existing roleConfig keys to reuse translations and behavior
   const mappedKey = (() => {
     const lowerRole =
-      roleFromProps?.toLowerCase() ||
-      role?.toLowerCase() ||
-      (effectiveIsInstructor ? "instructor" : undefined);
+      roleFromProps?.toLowerCase() || effectiveIsInstructor
+        ? "instructor"
+        : role?.toLowerCase();
 
-    if (lowerRole === "student" || lowerRole === "client") return "STUDENT";
+    if (lowerRole === "student") return "STUDENT";
     if (lowerRole === "instructor") return "INSTRUCTOR";
     if (lowerRole === "admin") return "ADMIN";
-    if (effectiveIsInstructor) return "INSTRUCTOR";
-    if (lowerRole === "delivery") return "DELIVERY";
-    if (lowerRole === "merchant") return "MERCHANT";
 
     return role as string | undefined;
   })();
@@ -380,8 +340,8 @@ function UserTable({
             users?.data?.length
               ? {
                   name: "users",
-                  totalItems: users?.total || 0,
-                  totalPages: users?.last_page || 1,
+                  totalItems: users?.meta.total || 0,
+                  totalPages: users?.meta.last_page || 1,
                 }
               : undefined
           }
@@ -391,7 +351,7 @@ function UserTable({
             <UserRowTable
               key={user.id}
               data={user}
-              // permissionKey={config!.permission}
+              mappedKey={mappedKey}
               configTranslate={config || {}}
             />
           )}

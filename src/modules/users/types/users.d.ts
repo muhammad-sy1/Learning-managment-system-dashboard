@@ -1,4 +1,4 @@
-import { IZone } from "@/modules/provinces/types/zone";
+// import { IZone } from "@/modules/provinces/types/zone";
 
 interface IAccountType {
   id: number;
@@ -76,61 +76,76 @@ export interface IMerchantCoPriceListItemPayload {
 }
 
 export interface IUser {
-  account_type: IAccountType;
-  store_name: string;
-  total_app_commission: string;
-  store_location: string;
-  store_latitude: string;
-  store_longitude: string;
-  id: number;
-  is_open: number;
-  supports_custom_order: number;
-  supports_normal_order: number;
-  app_commession: number | null;
-  store_name_slug: string;
-  total_earnings: number | null;
-  store_type: string;
-  store_category: string;
-
-  total_sales: number | string | null;
-  order_discounts_total: number | string | null;
-  total_other_transactions: number | string | null;
-  total_final_amount: number | string | null;
-
-  shipping_discounts_total: number | string | null;
-  orders_total_income: number | string | null;
-
-  // app_commession: number | null;
-  blocked_at: string | null;
-  roles: string[];
-  usd_to_syp_rate: number | null;
   created_at: string;
   email: string;
-  bio?: string;
+  email_verified: boolean;
+  id: number;
+  is_active: boolean;
+  is_instructor: boolean;
+  name: string;
+  role: string;
+
+  // account_type: IAccountType;
+  // store_name: string;
+  // total_app_commission: string;
+  // store_location: string;
+  // store_latitude: string;
+  // store_longitude: string;
+  // is_open: number;
+  // supports_custom_order: number;
+  // supports_normal_order: number;
+  // app_commession: number | null;
+  // store_name_slug: string;
+  // total_earnings: number | null;
+  // store_type: string;
+  // store_category: string;
+
+  // total_sales: number | string | null;
+  // order_discounts_total: number | string | null;
+  // total_other_transactions: number | string | null;
+  // total_final_amount: number | string | null;
+
+  // shipping_discounts_total: number | string | null;
+  // orders_total_income: number | string | null;
+
+  // app_commession: number | null;
+  // blocked_at: string | null;
+  // roles: string[];
+  // usd_to_syp_rate: number | null;
+  // created_at: string;
+  // email: string;
+  // bio?: string;
   // full_name: string;
-  first_name: string;
-  last_name: string;
-  image: string | null;
-  cover_image: string | null;
-  images: string[];
-  permissions: string[];
-  country_code: string;
-  phone_number: string;
-  is_delivery_manager: 0 | 1;
-  delivery_manager: {
-    id: number;
-    first_name: string;
-    last_name: string;
-  };
+  // first_name: string;
+  // last_name: string;
+  // image: string | null;
+  // cover_image: string | null;
+  // images: string[];
+  // permissions: string[];
+  // country_code: string;
+  // phone_number: string;
+  // is_delivery_manager: 0 | 1;
+  // delivery_manager: {
+  //   id: number;
+  //   first_name: string;
+  //   last_name: string;
+  // };
 
 
-  is_delivery_office_worker: 0 | 1;
-  is_delivery_admin: 0 | 1;
-  zones: IZone[];
+  // is_delivery_office_worker: 0 | 1;
+  // is_delivery_admin: 0 | 1;
+  // zones: IZone[];
 }
 
 export interface IGetUserResponse {
-  data: IUser
+  data: IUser[];
+  message: string;
+  meta: {
+    current_page: number;
+    last_page: number;
+    total: number;
+  };
+  success: boolean;
 }
 
 export interface IGetUserTokenResponse {

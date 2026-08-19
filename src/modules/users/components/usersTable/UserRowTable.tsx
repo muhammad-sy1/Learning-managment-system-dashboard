@@ -1,67 +1,25 @@
 import { SafeImage } from "@/components/SafeImage";
 import { TableCell } from "@/components/ui/table";
 import { formatUtcToLocal } from "@/utils/formatDate";
-import { useTranslations } from "next-intl";
 import UserTableActions from "./UserTableActions";
 import { IUser } from "../../types/users";
-// import { permissionType } from "./UserTable";
-import NavLink from "@/components/NavLink";
-import { Badge } from "@/components/ui/badge";
-
-type RoleKey = "admin" | "manager" | "office_staff" | "lista_staff";
-
-function getRoleKey(data: IUser): RoleKey {
-  if (data.is_delivery_admin === 1) return "admin";
-  if (data.is_delivery_manager === 1) return "manager";
-  if (data.is_delivery_office_worker === 1) return "office_staff";
-  return "lista_staff";
-}
 
 export default function UserRowTable({
   data,
-  // permissionKey,
   configTranslate,
+  mappedKey,
 }: {
   data: IUser;
-  // permissionKey: permissionType;
+  mappedKey: string | undefined;
   configTranslate: Record<string, string>;
 }) {
-  
-  const t = useTranslations("users");
-  
-  const roleConfig: Record<
-    RoleKey,
-    {
-      label: string;
-      variant: "default" | "secondary" | "destructive" | "outline";
-      className?: string;
-    }
-  > = {
-    admin: {
-      label: t("roles.admin"),
-      variant: "destructive",
-    },
-    manager: {
-      label: t("roles.manager"),
-      variant: "default",
-    },
-    office_staff: {
-      label: t("roles.office_staff"),
-      variant: "secondary",
-    },
-    lista_staff: {
-      label: t("roles.lista_staff"),
-      variant: "outline",
-    },
-  };
-  console.log("asdfsddddddddddddddddddddddddddj", data);
   return (
     <>
       <TableCell className=" py-3">{data.id}</TableCell>
       <TableCell>
         <UserTableActions
           data={data}
-          // permissionKey={permissionKey}
+          mappedKey={mappedKey}
           configTranslate={configTranslate}
         />
       </TableCell>
@@ -69,8 +27,8 @@ export default function UserRowTable({
         <div className="flex justify-center w-25 items-center">
           <div className="relative rounded-full ">
             <SafeImage
-              imageUrl={data.image}
-              alt={data.first_name ?? "User image"}
+              imageUrl={data.name}
+              alt={data.name ?? "User image"}
               className="h-10 w-10 rounded-full"
             />
             {/* {permissionKey === "merchants" && (
@@ -99,14 +57,14 @@ export default function UserRowTable({
       )} */}
 
       <TableCell>
-        <span className="truncate">{data.first_name}</span>
+        <span className="truncate">{data.name}</span>
       </TableCell>
 
-      <TableCell>{data.last_name}</TableCell>
+      {/* <TableCell>{data.last_name}</TableCell> */}
       <TableCell>{data.email}</TableCell>
 
       {/* <TableCell>{data.bio ?? "-"}</TableCell> */}
-{/* 
+      {/* 
       {permissionKey === "merchants" && (
         <>
           <TableCell>{data.store_name ?? <span>-</span>}</TableCell>
@@ -177,7 +135,7 @@ export default function UserRowTable({
         </>
       )} */}
 
-      <TableCell>
+      {/* <TableCell>
         {data.blocked_at ? (
           <span>
             {t("blocked")} {t("at")} {formatUtcToLocal(data.blocked_at)}
@@ -198,7 +156,7 @@ export default function UserRowTable({
             ---
           </span>
         )}
-      </TableCell>
+      </TableCell> */}
       <TableCell>
         {/* {new Date(data.created_at).toLocaleDateString()} */}
         {formatUtcToLocal(data.created_at)}

@@ -143,7 +143,7 @@ function normalizeCoPriceListItems(raw: unknown): IMerchantCoPriceListItem[] {
         typeof item.description === "string" ? item.description : "",
       main_price:
         typeof item.main_price === "number" ||
-        typeof item.main_price === "string"
+          typeof item.main_price === "string"
           ? item.main_price
           : null,
       new_price:
@@ -161,37 +161,37 @@ function normalizeCoPriceListImages(raw: unknown): IMerchantCoPriceListImage[] {
   return parseCoPriceListCollection(raw, "images").reduce<
     IMerchantCoPriceListImage[]
   >((acc, image) => {
-      if (typeof image === "string") {
-        acc.push({
-          id: undefined,
-          image,
-        });
-
-        return acc;
-      }
-
-      if (!isRecord(image)) {
-        return acc;
-      }
-
-      const resolvedImage =
-        typeof image.image === "string"
-          ? image.image
-          : typeof image.url === "string"
-            ? image.url
-            : typeof image.path === "string"
-              ? image.path
-              : typeof image.file_path === "string"
-              ? image.file_path
-              : "";
-
+    if (typeof image === "string") {
       acc.push({
-        id: parseOptionalId(image.id),
-        image: resolvedImage,
+        id: undefined,
+        image,
       });
 
       return acc;
-    }, []);
+    }
+
+    if (!isRecord(image)) {
+      return acc;
+    }
+
+    const resolvedImage =
+      typeof image.image === "string"
+        ? image.image
+        : typeof image.url === "string"
+          ? image.url
+          : typeof image.path === "string"
+            ? image.path
+            : typeof image.file_path === "string"
+              ? image.file_path
+              : "";
+
+    acc.push({
+      id: parseOptionalId(image.id),
+      image: resolvedImage,
+    });
+
+    return acc;
+  }, []);
 }
 
 export async function fetchUsersClient(
@@ -229,10 +229,10 @@ export async function createUser(userData: FormData) {
   }
 }
 
-export async function updateUser(id: number | string, userData: FormData) {
+export async function updateUser(userData: FormData) {
   try {
     const response = await fetcherClient.post(
-      `${endpoints.updateUser}${id}`,
+      "/instructor/apply",
       userData,
     );
 

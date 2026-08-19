@@ -3,7 +3,7 @@ import { ROUTE_PERMISSIONS_MAP } from "@/lib/constants";
 import {
   // Activity,
   BookOpen,
-  // Folder,
+  Folder,
   // FolderOpen,
   // Headphones,
   Home,
@@ -16,13 +16,13 @@ import {
   // Paperclip,
   Settings,
   Shield,
-  ShoppingCart,
   Signal,
   // Star,
   Store,
   // Tag,
   User,
   Users,
+  WalletCards,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { MenuItem } from "./app-sidebar";
@@ -34,7 +34,6 @@ export function SidebarRoutes(): MenuItem[] {
   const hasPermission = usePermissionStore((state) => state.hasPermission);
   // const user = useAuth((state) => state?.user);
   // const isSuperAdmin =
-  //   Array.isArray(user?.roles) && user.roles[0] === "SUPER_ADMIN";
 
   const routes: MenuItem[] = [
     // Home
@@ -53,6 +52,16 @@ export function SidebarRoutes(): MenuItem[] {
       href: "/dashboard/courses",
       label: t("navigation.courses"),
       icon: BookOpen,
+    },
+    {
+      href: "/dashboard/payout-requests",
+      label: t("navigation.payoutRequests"),
+      icon: WalletCards,
+    },
+    {
+      href: "/dashboard/categories",
+      label: t("navigation.categories"),
+      icon: Folder,
     },
 
     // Users

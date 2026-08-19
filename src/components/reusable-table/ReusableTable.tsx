@@ -87,7 +87,7 @@ export default function ReusableTable<T>({
       className={cn(
         "relative overflow-hidden  mx-auto rounded-xl border bg-card shadow-sm transition-colors duration-300",
         "border-border/50 shadow-lg",
-        className
+        className,
       )}
     >
       {/* Table Container with Custom Scrollbar */}
@@ -117,6 +117,12 @@ export default function ReusableTable<T>({
           </CardHeader>
         )}
 
+        {description && (
+          <div className="px-6 pb-4">
+            <p className="text-sm text-muted-foreground">{description}</p>
+          </div>
+        )}
+
         <CardContent className="p-0">
           <div className="relative overflow-x-auto">
             <Table className="">
@@ -133,7 +139,7 @@ export default function ReusableTable<T>({
                       className={cn(
                         "text-center font-semibold text-muted-foreground  ",
                         currentDensity.headerPadding,
-                        currentDensity.headerText
+                        currentDensity.headerText,
                       )}
                     >
                       <div className="flex items-center justify-center gap-2">
@@ -167,7 +173,7 @@ export default function ReusableTable<T>({
                           "border-b border-border/30 last:border-b-0",
                           "hover:bg-muted/50 hover:shadow-sm",
                           "focus-visible:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 ",
-                          onRowClick && "cursor-pointer hover:scale-[1.001]"
+                          onRowClick && "cursor-pointer hover:scale-[1.001]",
                         )}
                         tabIndex={onRowClick ? 0 : undefined}
                         role={onRowClick ? "button" : undefined}

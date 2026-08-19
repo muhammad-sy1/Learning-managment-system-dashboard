@@ -1,12 +1,9 @@
-import { StatsGrid } from '@/modules/home/components/StatsGrid'
-import React from 'react'
+import CoursesTable from "@/modules/courses/components/coursesTable/CoursesTable";
 
-const StatsticsPage = () => {
+export default function CoursesPage() {
   return (
-    <div>
-        {/* <StatsGrid/> */}
+    <div className="space-y-6">
+      <CoursesTable />
     </div>
-  )
+  );
 }
-
-export default StatsticsPage
