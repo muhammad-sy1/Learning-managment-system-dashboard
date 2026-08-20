@@ -122,6 +122,9 @@ const endpoints = {
   // courses (instructor / admin)
   getMyCourses: "/instructor/courses",
   getAdminCourses: "/admin/courses",
+  getCourseDetails: (id: string | number) => `/courses/find?id=${id}`,
+  getInstructorCourseDetails: (id: string | number) =>
+    `/instructor/courses/CourseById?id=${id}`,
   createCourse: "/instructor/courses",
   updateCourse: "/instructor/courses/",
   deleteCourse: "/instructor/courses/",
@@ -136,10 +139,13 @@ const endpoints = {
   approveCourse: (id: string | number) => `/admin/courses/${id}/approve`,
   rejectCourse: (id: string | number) => `/admin/courses/${id}/reject`,
   updateCourseStatus: (id: string | number) => `/admin/courses/${id}/status`,
+  uploadLessonVideo: "/upload/lesson/video",
+  uploadLessonPdf: "/upload/lesson/pdf",
+  uploadCoursePromoVideo: "/upload/course/promo-video",
 
   // payouts
   getInstructorEarnings: "/instructor/earnings",
-  getInstructorPayoutRequests: "/instructor/payout-requests",
+  getInstructorPayoutRequests: "/instructor/payout-request",
   requestInstructorPayout: "/instructor/payout-request",
   getAdminPayoutRequests: "/admin/payout-requests",
   processAdminPayout: "/admin/payout-requests/process",

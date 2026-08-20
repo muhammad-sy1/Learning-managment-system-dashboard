@@ -3,7 +3,6 @@ import fetcherClient from "@/lib/api/fetcher/client";
 import { handleApiError } from "@/utils/handleApiError";
 import {
     ICourse,
-    ICourseSection,
     ICreateCourseLessonPayload,
     ICreateCoursePayload,
     ICreateCourseSectionPayload,
@@ -31,12 +30,115 @@ export async function fetchAdminCoursesClient() {
     }
 }
 
-export async function fetchCourseCurriculumClient(slug: string) {
+export async function fetchCourseDetailsClient(
+    id: number | string,
+    role?: "admin" | "student",
+) {
     try {
-        const response = await fetcherClient.get<{ data: ICourseSection[] }>(
-            endpoints.getCourseCurriculum(slug),
+        return await fetcherClient.get<{ data: ICourse }>(
+            role === "student"
+                ? endpoints.getInstructorCourseDetails(id)
+                : endpoints.getCourseDetails(id),
         );
-        return response;
+    } catch (err) {
+        throw handleApiError(err);
+    }
+}
+
+export async function uploadLessonVideoClient(lessonId: number | string, file: File) {
+    const formData = new FormData();
+    formData.append("lesson_id", String(lessonId));
+    formData.append("video", file);
+    try {
+        return await fetcherClient.post(endpoints.uploadLessonVideo, formData);
+    } catch (err) {
+        throw handleApiError(err);
+    }
+}
+
+export async function createVideoLessonClient(
+    sectionId: number | string,
+    payload: ICreateCourseLessonPayload,
+    file: File,
+    onStep?: (step: "creating" | "uploading" | "finalizing") => void,
+) {
+    try {
+        onStep?.("creating");
+        const createdLesson = await createCourseLessonClient(sectionId, {
+            ...payload,
+            // The API requires a video URL during creation; replace this after upload.
+            video_url: payload.video_url || "pending-upload",
+        });
+        const lessonId = (createdLesson as { data?: { id?: number } }).data?.id;
+
+        if (!lessonId) {
+            throw new Error("The lesson was created without an ID.");
+        }
+
+        onStep?.("uploading");
+        const uploadedVideo = await uploadLessonVideoClient(lessonId, file);
+        const uploadData = (uploadedVideo as {
+            data?: { url?: string };
+        }).data;
+
+        if (!uploadData?.url) {
+            throw new Error("The uploaded video response has no URL.");
+        }
+
+        onStep?.("finalizing");
+        return updateCourseLessonClient(lessonId, {
+            ...payload,
+            video_url: uploadData.url,
+        });
+    } catch (err) {
+        throw handleApiError(err);
+    }
+}
+
+export async function replaceVideoLessonClient(
+    lessonId: number | string,
+    payload: ICreateCourseLessonPayload,
+    file: File,
+    onStep?: (step: "uploading" | "finalizing") => void,
+) {
+    try {
+        onStep?.("uploading");
+        const uploadedVideo = await uploadLessonVideoClient(lessonId, file);
+        const uploadData = (uploadedVideo as {
+            data?: { url?: string };
+        }).data;
+
+        if (!uploadData?.url) {
+            throw new Error("The uploaded video response has no URL.");
+        }
+
+        onStep?.("finalizing");
+        return updateCourseLessonClient(lessonId, {
+            ...payload,
+            video_url: uploadData.url,
+        });
+    } catch (err) {
+        throw handleApiError(err);
+    }
+}
+
+export async function uploadLessonPdfClient(lessonId: number | string, file: File) {
+    const formData = new FormData();
+    formData.append("lesson_id", String(lessonId));
+    formData.append("pdf", file);
+    try {
+        return await fetcherClient.post(endpoints.uploadLessonPdf, formData);
+    } catch (err) {
+        throw handleApiError(err);
+    }
+}
+
+export async function uploadCoursePromoVideoClient(courseId: number | string, file: File) {
+    const formData = new FormData();
+    formData.append("course_id", String(courseId));
+    formData.append("video", file);
+    try {
+        return await fetcherClient.post(endpoints.uploadCoursePromoVideo, formData);
     } catch (err) {
         throw handleApiError(err);
     }
@@ -141,9 +243,9 @@ export async function approveCourseClient(id: number | string) {
     }
 }
 
-export async function rejectCourseClient(id: number | string, reason: string) {
+export async function rejectCourseClient(id: number | string) {
     try {
-        const response = await fetcherClient.post(endpoints.rejectCourse(id), { reason });
+        const response = await fetcherClient.post(endpoints.rejectCourse(id));
         return response;
     } catch (err) {
         throw handleApiError(err);
@@ -152,18 +254,15 @@ export async function rejectCourseClient(id: number | string, reason: string) {
 
 export async function updateCourseStatusClient(id: number | string, status: string, reason?: string) {
     try {
-        if (status === "rejected") {
-            if (!reason || reason.trim().length < 10) {
-                throw new Error("Rejection reason is required and must be at least 10 characters long.");
-            }
-            return await fetcherClient.patch(endpoints.updateCourseStatus(id), { status, reason });
-        }
-
         if (status === "published") {
-            return await fetcherClient.patch(endpoints.updateCourseStatus(id), { status });
+            return await approveCourseClient(id);
         }
 
-        return await fetcherClient.patch(endpoints.updateCourseStatus(id), { status });
+        if (status === "rejected") {
+            return await rejectCourseClient(id);
+        }
+
+        return await fetcherClient.patch(endpoints.updateCourseStatus(id), { status, reason });
     } catch (err) {
         throw handleApiError(err);
     }

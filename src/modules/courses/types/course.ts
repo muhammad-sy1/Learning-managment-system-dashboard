@@ -8,8 +8,15 @@ export interface ICourse {
     language?: string;
     is_free?: boolean;
     price?: number;
-    instructor?: { id: number; name: string } | null;
-    category?: string | null;
+    thumbnail?: string | null;
+    promo_video?: string | null;
+    instructor?: { id: number; name: string; avatar?: string | null; courses_count?: number; total_students?: number } | null;
+    category?: { id: number; name: string } | string | null;
+    what_you_learn?: string[];
+    requirements?: string[];
+    has_certificate?: boolean;
+    published_at?: string | null;
+    sections?: ICourseSection[];
     total_enrollments?: number;
     average_rating?: number;
     submitted_at?: string | null;

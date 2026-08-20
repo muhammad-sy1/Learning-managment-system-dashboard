@@ -1,9 +1,12 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Form } from "@/components/ui/form";
 import FormInput from "@/components/form-fields/FormInput";
 import FormSelect from "@/components/form-fields/FormSelect";
@@ -14,6 +17,8 @@ import { ICourse, ICreateCoursePayload } from "../../types/course";
 import useCreateCourse from "../../hooks/useCreateCourse";
 import useUpdateCourse from "../../hooks/useUpdateCourse";
 import { fetchCategoriesClient } from "@/modules/categories/services/categories";
+import { uploadCoursePromoVideoClient } from "../../services/courses";
+import { toast } from "sonner";
 
 const levels = [
   { label: "Beginner", value: "beginner" },
@@ -37,6 +42,16 @@ export default function AddEditCourseForm({
   const t = useTranslations("Dashboard.CoursesPage");
   const create = useCreateCourse();
   const update = useUpdateCourse();
+  const [promoVideo, setPromoVideo] = useState<File | null>(null);
+  const uploadPromoMutation = useMutation({
+    mutationFn: (file: File) => uploadCoursePromoVideoClient(course!.id, file),
+    onSuccess: () => {
+      setPromoVideo(null);
+      toast.success(t("courseMediaUploaded"));
+    },
+    onError: (error: any) =>
+      toast.error(error?.message || t("courseMediaUploadError")),
+  });
 
   const defaultValues: Partial<ICreateCoursePayload> = {
     title: course?.title || "",
@@ -98,7 +113,7 @@ export default function AddEditCourseForm({
             placeholder={t("fields.descriptionPlaceholder")}
           />
 
-          <FormSelect
+          {/* <FormSelect
             name="status"
             label={t("fields.status")}
             options={[
@@ -107,7 +122,7 @@ export default function AddEditCourseForm({
               { label: t("statuses.pending_review"), value: "pending_review" },
             ]}
             control={form.control}
-          />
+          /> */}
 
           <FormSelect
             name="level"
@@ -171,6 +186,38 @@ export default function AddEditCourseForm({
             label={t("fields.category")}
             placeholder={t("fields.categoryPlaceholder")}
           />
+
+          {course && (
+            <div className="space-y-3 rounded-md border p-3">
+              <p className="font-medium">{t("coursePromoVideo")}</p>
+              {course.promo_video && (
+                <video
+                  controls
+                  className="max-h-48 w-full rounded-md"
+                  src={course.promo_video}
+                />
+              )}
+              <Input
+                type="file"
+                accept="video/*"
+                onChange={(event) =>
+                  setPromoVideo(event.target.files?.[0] ?? null)
+                }
+              />
+              <Button
+                type="button"
+                variant="outline"
+                disabled={!promoVideo || uploadPromoMutation.isPending}
+                onClick={() =>
+                  promoVideo && uploadPromoMutation.mutate(promoVideo)
+                }
+              >
+                {uploadPromoMutation.isPending
+                  ? t("curriculum.uploading")
+                  : t("curriculum.uploadVideo")}
+              </Button>
+            </div>
+          )}
           <div>
             <Button type="submit" className="w-full">
               {create.isPending || update.isPending ? (

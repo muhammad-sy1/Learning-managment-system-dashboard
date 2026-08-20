@@ -6,7 +6,7 @@ export default function useRejectCourse() {
     const client = useQueryClient();
 
     return useMutation({
-        mutationFn: ({ id, reason }: any) => rejectCourseClient(id, reason),
+        mutationFn: ({ id }: { id: number | string }) => rejectCourseClient(id),
         onSuccess() {
             client.invalidateQueries([COURSES_TABLE_QUERY_KEY]);
         },

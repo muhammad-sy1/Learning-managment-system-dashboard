@@ -13,6 +13,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { TableCell } from "@/components/ui/table";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 import { usePermissionStore } from "@/hooks/usePermissionStore";
 import { Edit, MoreHorizontal, PencilLine, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -49,7 +51,7 @@ export default function CourseRowTable({ data }: { data: ICourse }) {
   const user = useAuth((state) => state.user?.role);
   const isInstructor = user === "student";
 
-  const statusOptions = ["draft", "published", "pending_review", "rejected"];
+  const statusOptions = ["published", "rejected"] as const;
 
   const getStatusLabel = (status: string) => {
     const key = status?.replace(/\s+/g, "_") || "draft";
@@ -136,39 +138,40 @@ export default function CourseRowTable({ data }: { data: ICourse }) {
         maxWidth="md"
       >
         <div className="space-y-4">
-          <div className="space-y-2">
+          <RadioGroup
+            defaultValue={data.status === "rejected" ? "rejected" : "published"}
+            className="space-y-3"
+            onValueChange={(status) => {
+              if (
+                !statusOptions.includes(
+                  status as (typeof statusOptions)[number],
+                )
+              ) {
+                return;
+              }
+
+              updateStatusMutation.mutate(
+                { id: data.id, status },
+                { onSuccess: () => setStatusOpen(false) },
+              );
+            }}
+            disabled={updateStatusMutation.isPending}
+          >
             {statusOptions.map((status) => (
-              <Button
+              <div
                 key={status}
-                type="button"
-                variant={data.status === status ? "default" : "outline"}
-                className="w-full justify-start"
-                onClick={() => {
-                  if (status === "rejected") {
-                    const reasonValue = window.prompt(
-                      t("status.reasonPrompt") ||
-                        "Please provide the rejection reason:",
-                    );
-
-                    if (reasonValue === null) return;
-
-                    updateStatusMutation.mutate(
-                      { id: data.id, status, reason: reasonValue },
-                      { onSuccess: () => setStatusOpen(false) },
-                    );
-                    return;
-                  }
-
-                  updateStatusMutation.mutate(
-                    { id: data.id, status },
-                    { onSuccess: () => setStatusOpen(false) },
-                  );
-                }}
+                className="flex items-center gap-3 rounded-md border p-3"
               >
-                {getStatusLabel(status)}
-              </Button>
+                <RadioGroupItem
+                  value={status}
+                  id={`course-${data.id}-status-${status}`}
+                />
+                <Label htmlFor={`course-${data.id}-status-${status}`}>
+                  {getStatusLabel(status)}
+                </Label>
+              </div>
             ))}
-          </div>
+          </RadioGroup>
         </div>
       </ResponsiveModal>
 

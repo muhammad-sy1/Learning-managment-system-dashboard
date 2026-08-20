@@ -5,6 +5,7 @@ import {
   AlertCircle,
   BookOpen,
   FileText,
+  ExternalLink,
   Layers3,
   Pencil,
   Plus,
@@ -15,6 +16,8 @@ import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { ResponsiveModal } from "@/components/ResponsiveModal";
 import { Button } from "@/components/ui/button";
+import FileDropzone from "@/components/ui/file-dropzone";
+import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -28,17 +31,27 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { ICourse, ICourseSection, ICourseLesson } from "../../types/course";
+import {
+  ICourse,
+  ICourseSection,
+  ICourseLesson,
+  ICreateCourseLessonPayload,
+} from "../../types/course";
 import {
   createCourseLessonClient,
+  createVideoLessonClient,
+  replaceVideoLessonClient,
   createCourseSectionClient,
   deleteCourseLessonClient,
   deleteCourseSectionClient,
-  fetchCourseCurriculumClient,
   updateCourseLessonClient,
   updateCourseSectionClient,
+  uploadLessonPdfClient,
+  uploadLessonVideoClient,
+  fetchCourseDetailsClient,
 } from "../../services/courses";
 import { AreYouSureDeleteing } from "@/components/AreYouSureDeleteing";
+import useAuth from "@/modules/auth/store/authStore";
 
 const lessonTypes = [
   { value: "video", label: "Video" },
@@ -66,6 +79,7 @@ interface LessonDraft {
 export default function CourseCurriculumModal({ course }: { course: ICourse }) {
   const t = useTranslations("Dashboard.CoursesPage");
   const queryClient = useQueryClient();
+  const role = useAuth((state) => state.user?.role);
   const [open, setOpen] = useState(false);
   const [sectionDraft, setSectionDraft] = useState<SectionDraft>({
     title: "",
@@ -84,6 +98,10 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
   const [sectionEditorId, setSectionEditorId] = useState<number | null>(null);
   const [lessonEditorId, setLessonEditorId] = useState<number | null>(null);
   const [lessonSectionId, setLessonSectionId] = useState<number | null>(null);
+  const [lessonFile, setLessonFile] = useState<File | null>(null);
+  const [videoFlowStep, setVideoFlowStep] = useState<
+    "idle" | "creating" | "uploading" | "finalizing"
+  >("idle");
   const [sectionAction, setSectionAction] = useState<
     { mode: "create" } | { mode: "edit"; section: ICourseSection } | null
   >(null);
@@ -94,18 +112,18 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
   >(null);
 
   const curriculumQueryKey = useMemo(
-    () => ["course-curriculum", course.id, course.slug],
-    [course.id, course.slug],
+    () => ["course-details", course.id, role],
+    [course.id, role],
   );
 
   const { data, isPending } = useQuery({
     queryKey: curriculumQueryKey,
-    queryFn: () => fetchCourseCurriculumClient(course.slug || ""),
-    enabled: open && !!course.slug,
+    queryFn: () => fetchCourseDetailsClient(course.id, role),
+    enabled: open,
     retry: false,
   });
 
-  const sections = (data?.data ?? []) as ICourseSection[];
+  const sections = (data?.data?.sections ?? []) as ICourseSection[];
 
   const invalidateCurriculum = () =>
     queryClient.invalidateQueries({ queryKey: curriculumQueryKey });
@@ -172,12 +190,61 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
       });
       setLessonEditorId(null);
       setLessonSectionId(null);
+      setLessonFile(null);
       setLessonAction(null);
       invalidateCurriculum();
       toast.success(t("curriculum.lessonCreated"));
     },
     onError: (error: any) => {
       toast.error(error?.message || t("curriculum.lessonCreateError"));
+    },
+  });
+
+  const createVideoLessonMutation = useMutation({
+    mutationFn: ({
+      sectionId,
+      payload,
+      file,
+    }: {
+      sectionId: number;
+      payload: ICreateCourseLessonPayload;
+      file: File;
+    }) => createVideoLessonClient(sectionId, payload, file, setVideoFlowStep),
+    onMutate: () => setVideoFlowStep("creating"),
+    onSuccess: () => {
+      setVideoFlowStep("idle");
+      setLessonFile(null);
+      resetLessonForm();
+      invalidateCurriculum();
+      toast.success(t("curriculum.lessonCreated"));
+    },
+    onError: (error: any) => {
+      setVideoFlowStep("idle");
+      toast.error(error?.message || t("curriculum.lessonCreateError"));
+    },
+  });
+
+  const replaceVideoLessonMutation = useMutation({
+    mutationFn: ({
+      lessonId,
+      payload,
+      file,
+    }: {
+      lessonId: number;
+      payload: ICreateCourseLessonPayload;
+      file: File;
+    }) => replaceVideoLessonClient(lessonId, payload, file, setVideoFlowStep),
+    onMutate: () => setVideoFlowStep("uploading"),
+    onSuccess: () => {
+      setVideoFlowStep("idle");
+      setLessonFile(null);
+      resetLessonForm();
+      invalidateCurriculum();
+      toast.success(t("curriculum.lessonUpdated"));
+    },
+    onError: (error: any) => {
+      setVideoFlowStep("idle");
+      toast.error(error?.message || t("curriculum.lessonUpdateError"));
     },
   });
 
@@ -197,6 +264,7 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
       });
       setLessonEditorId(null);
       setLessonSectionId(null);
+      setLessonFile(null);
       setLessonAction(null);
       invalidateCurriculum();
       toast.success(t("curriculum.lessonUpdated"));
@@ -214,6 +282,29 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
     },
     onError: (error: any) => {
       toast.error(error?.message || t("curriculum.lessonDeleteError"));
+    },
+  });
+
+  const uploadLessonMutation = useMutation({
+    mutationFn: ({
+      lessonId,
+      file,
+      type,
+    }: {
+      lessonId: number;
+      file: File;
+      type: "video" | "pdf";
+    }) =>
+      type === "video"
+        ? uploadLessonVideoClient(lessonId, file)
+        : uploadLessonPdfClient(lessonId, file),
+    onSuccess: () => {
+      setLessonFile(null);
+      invalidateCurriculum();
+      toast.success(t("curriculum.fileUploaded"));
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || t("curriculum.fileUploadError"));
     },
   });
 
@@ -237,11 +328,21 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
     }
 
     if (lessonDraft.type === "video") {
-      if (!lessonDraft.video_url.trim()) {
+      if (!lessonEditorId && !lessonFile) {
+        toast.error(t("curriculum.videoFileError"));
+        return false;
+      }
+
+      if (lessonEditorId && !lessonDraft.video_url.trim() && !lessonFile) {
         toast.error(t("curriculum.videoUrlError"));
         return false;
       }
-      if (!lessonDraft.duration.trim() || Number(lessonDraft.duration) <= 0) {
+
+      if (
+        lessonEditorId &&
+        !lessonFile &&
+        (!lessonDraft.duration.trim() || Number(lessonDraft.duration) <= 0)
+      ) {
         toast.error(t("curriculum.durationError"));
         return false;
       }
@@ -283,11 +384,13 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
   const submitLesson = () => {
     if (!lessonSectionId || !validateLesson()) return;
 
-    const payload = {
+    const payload: ICreateCourseLessonPayload = {
       title: lessonDraft.title.trim(),
       type: lessonDraft.type,
-      video_url: lessonDraft.video_url || undefined,
-      duration: lessonDraft.duration ? Number(lessonDraft.duration) : undefined,
+      duration:
+        lessonDraft.type === "video" && lessonDraft.duration
+          ? Number(lessonDraft.duration)
+          : undefined,
       pdf_url: lessonDraft.pdf_url || undefined,
       article_content: lessonDraft.article_content || undefined,
       is_free_preview: lessonDraft.is_free_preview,
@@ -295,6 +398,27 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
         ? Number(lessonDraft.order_index)
         : undefined,
     };
+
+    if (lessonDraft.type === "video" && lessonEditorId) {
+      payload.video_url = lessonDraft.video_url || undefined;
+    }
+
+    if (lessonDraft.type === "video" && lessonFile) {
+      if (lessonEditorId) {
+        replaceVideoLessonMutation.mutate({
+          lessonId: lessonEditorId,
+          payload,
+          file: lessonFile,
+        });
+      } else {
+        createVideoLessonMutation.mutate({
+          sectionId: lessonSectionId,
+          payload,
+          file: lessonFile,
+        });
+      }
+      return;
+    }
 
     if (lessonEditorId) {
       updateLessonMutation.mutate({ lessonId: lessonEditorId, payload });
@@ -326,6 +450,7 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
     lesson?: ICourseLesson,
   ) => {
     setLessonSectionId(sectionId);
+    setLessonFile(null);
     setLessonEditorId(lesson ? lesson.id : null);
     setLessonDraft({
       title: lesson?.title ?? "",
@@ -526,6 +651,28 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
                           {lesson.is_free_preview ? (
                             <span>{t("curriculum.freePreview")}</span>
                           ) : null}
+                          {lesson.video_url ? (
+                            <a
+                              href={lesson.video_url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-1 text-primary hover:underline"
+                            >
+                              <ExternalLink className="h-3 w-3" />
+                              {t("curriculum.viewVideo")}
+                            </a>
+                          ) : null}
+                          {lesson.pdf_url ? (
+                            <a
+                              href={lesson.pdf_url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-1 text-primary hover:underline"
+                            >
+                              <ExternalLink className="h-3 w-3" />
+                              {t("curriculum.viewPdf")}
+                            </a>
+                          ) : null}
                         </div>
                       </div>
                     ))}
@@ -684,16 +831,23 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
               {lessonDraft.type === "video" && (
                 <>
                   <div className="space-y-2 md:col-span-2">
-                    <Label>{t("curriculum.videoUrl")}</Label>
-                    <Input
-                      value={lessonDraft.video_url}
-                      onChange={(e) =>
-                        setLessonDraft((prev) => ({
-                          ...prev,
-                          video_url: e.target.value,
-                        }))
-                      }
-                      placeholder="https://..."
+                    <Label>{t("curriculum.videoFile")}</Label>
+                    <FileDropzone
+                      value={lessonFile ?? lessonDraft.video_url}
+                      onChange={(file) => {
+                        setLessonFile(file);
+                        if (!file) {
+                          setLessonDraft((previous) => ({
+                            ...previous,
+                            video_url: "",
+                            duration: "",
+                          }));
+                        }
+                      }}
+                      accept={{ "video/*": [] }}
+                      disabled={videoFlowStep !== "idle"}
+                      placeholder={t("curriculum.videoDropzonePlaceholder")}
+                      hint={t("curriculum.videoDropzoneHint")}
                     />
                   </div>
                   <div className="space-y-2">
@@ -702,13 +856,14 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
                       type="number"
                       min={1}
                       value={lessonDraft.duration}
+                      // readOnly={Boolean(lessonFile || lessonDraft.video_url)}
                       onChange={(e) =>
                         setLessonDraft((prev) => ({
                           ...prev,
                           duration: e.target.value,
                         }))
                       }
-                      placeholder="30"
+                      placeholder={t("curriculum.durationFromVideo")}
                     />
                   </div>
                 </>
@@ -727,6 +882,35 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
                     }
                     placeholder="https://..."
                   />
+                  {lessonEditorId && (
+                    <>
+                      <Label>{t("curriculum.uploadPdf")}</Label>
+                      <Input
+                        type="file"
+                        accept="application/pdf,.pdf"
+                        onChange={(event) =>
+                          setLessonFile(event.target.files?.[0] ?? null)
+                        }
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        disabled={!lessonFile || uploadLessonMutation.isPending}
+                        onClick={() =>
+                          lessonFile &&
+                          uploadLessonMutation.mutate({
+                            lessonId: lessonEditorId,
+                            file: lessonFile,
+                            type: "pdf",
+                          })
+                        }
+                      >
+                        {uploadLessonMutation.isPending
+                          ? t("curriculum.uploading")
+                          : t("curriculum.uploadPdf")}
+                      </Button>
+                    </>
+                  )}
                 </div>
               )}
 
@@ -783,17 +967,45 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
             </div>
 
             <div className="flex gap-2">
+              {videoFlowStep !== "idle" && (
+                <div className="w-full space-y-2 rounded-md border bg-muted/30 p-3">
+                  <div className="flex items-center justify-between text-sm">
+                    <span>{t(`curriculum.videoFlow.${videoFlowStep}`)}</span>
+                    <span className="text-muted-foreground">
+                      {videoFlowStep === "creating"
+                        ? "25%"
+                        : videoFlowStep === "uploading"
+                          ? "65%"
+                          : "90%"}
+                    </span>
+                  </div>
+                  <Progress
+                    value={
+                      videoFlowStep === "creating"
+                        ? 25
+                        : videoFlowStep === "uploading"
+                          ? 65
+                          : 90
+                    }
+                  />
+                </div>
+              )}
               <Button
                 type="button"
                 onClick={submitLesson}
                 disabled={
                   createLessonMutation.isPending ||
-                  updateLessonMutation.isPending
+                  updateLessonMutation.isPending ||
+                  createVideoLessonMutation.isPending ||
+                  replaceVideoLessonMutation.isPending ||
+                  videoFlowStep !== "idle"
                 }
                 className="flex-1"
               >
                 {createLessonMutation.isPending ||
-                updateLessonMutation.isPending
+                updateLessonMutation.isPending ||
+                createVideoLessonMutation.isPending ||
+                replaceVideoLessonMutation.isPending
                   ? t("curriculum.saving")
                   : lessonAction.mode === "create"
                     ? t("curriculum.createLesson")
