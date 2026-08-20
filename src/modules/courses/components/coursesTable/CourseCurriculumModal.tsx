@@ -40,6 +40,7 @@ import {
 import {
   createCourseLessonClient,
   createVideoLessonClient,
+  createPdfLessonClient,
   replaceVideoLessonClient,
   createCourseSectionClient,
   deleteCourseLessonClient,
@@ -224,6 +225,27 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
     },
   });
 
+  const createPdfLessonMutation = useMutation({
+    mutationFn: ({
+      sectionId,
+      payload,
+      file,
+    }: {
+      sectionId: number;
+      payload: ICreateCourseLessonPayload;
+      file: File;
+    }) => createPdfLessonClient(sectionId, payload, file),
+    onSuccess: () => {
+      setLessonFile(null);
+      resetLessonForm();
+      invalidateCurriculum();
+      toast.success(t("curriculum.lessonCreated"));
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || t("curriculum.lessonCreateError"));
+    },
+  });
+
   const replaceVideoLessonMutation = useMutation({
     mutationFn: ({
       lessonId,
@@ -348,7 +370,16 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
       }
     }
 
-    if (lessonDraft.type === "pdf" && !lessonDraft.pdf_url.trim()) {
+    if (lessonDraft.type === "pdf" && !lessonEditorId && !lessonFile) {
+      toast.error(t("curriculum.pdfFileError"));
+      return false;
+    }
+
+    if (
+      lessonDraft.type === "pdf" &&
+      !lessonDraft.pdf_url.trim() &&
+      !lessonFile
+    ) {
       toast.error(t("curriculum.pdfUrlError"));
       return false;
     }
@@ -398,6 +429,15 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
         ? Number(lessonDraft.order_index)
         : undefined,
     };
+
+    if (!lessonEditorId && lessonDraft.type === "pdf" && lessonFile) {
+      createPdfLessonMutation.mutate({
+        sectionId: lessonSectionId,
+        payload,
+        file: lessonFile,
+      });
+      return;
+    }
 
     if (lessonDraft.type === "video" && lessonEditorId) {
       payload.video_url = lessonDraft.video_url || undefined;
@@ -871,45 +911,44 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
 
               {lessonDraft.type === "pdf" && (
                 <div className="space-y-2 md:col-span-2">
-                  <Label>{t("curriculum.pdfUrl")}</Label>
-                  <Input
-                    value={lessonDraft.pdf_url}
-                    onChange={(e) =>
-                      setLessonDraft((prev) => ({
-                        ...prev,
-                        pdf_url: e.target.value,
-                      }))
+                  <Label>{t("curriculum.pdfFile")}</Label>
+                  <FileDropzone
+                    value={lessonFile ?? lessonDraft.pdf_url}
+                    onChange={(file) => {
+                      setLessonFile(file);
+                      if (!file) {
+                        setLessonDraft((previous) => ({
+                          ...previous,
+                          pdf_url: "",
+                        }));
+                      }
+                    }}
+                    accept={{ "application/pdf": [".pdf"] }}
+                    placeholder={t("curriculum.pdfDropzonePlaceholder")}
+                    hint={t("curriculum.pdfDropzoneHint")}
+                    disabled={
+                      uploadLessonMutation.isPending ||
+                      createPdfLessonMutation.isPending
                     }
-                    placeholder="https://..."
                   />
                   {lessonEditorId && (
-                    <>
-                      <Label>{t("curriculum.uploadPdf")}</Label>
-                      <Input
-                        type="file"
-                        accept="application/pdf,.pdf"
-                        onChange={(event) =>
-                          setLessonFile(event.target.files?.[0] ?? null)
-                        }
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        disabled={!lessonFile || uploadLessonMutation.isPending}
-                        onClick={() =>
-                          lessonFile &&
-                          uploadLessonMutation.mutate({
-                            lessonId: lessonEditorId,
-                            file: lessonFile,
-                            type: "pdf",
-                          })
-                        }
-                      >
-                        {uploadLessonMutation.isPending
-                          ? t("curriculum.uploading")
-                          : t("curriculum.uploadPdf")}
-                      </Button>
-                    </>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={!lessonFile || uploadLessonMutation.isPending}
+                      onClick={() =>
+                        lessonFile &&
+                        uploadLessonMutation.mutate({
+                          lessonId: lessonEditorId,
+                          file: lessonFile,
+                          type: "pdf",
+                        })
+                      }
+                    >
+                      {uploadLessonMutation.isPending
+                        ? t("curriculum.uploading")
+                        : t("curriculum.uploadPdf")}
+                    </Button>
                   )}
                 </div>
               )}
@@ -997,6 +1036,7 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
                   createLessonMutation.isPending ||
                   updateLessonMutation.isPending ||
                   createVideoLessonMutation.isPending ||
+                  createPdfLessonMutation.isPending ||
                   replaceVideoLessonMutation.isPending ||
                   videoFlowStep !== "idle"
                 }
@@ -1005,6 +1045,7 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
                 {createLessonMutation.isPending ||
                 updateLessonMutation.isPending ||
                 createVideoLessonMutation.isPending ||
+                createPdfLessonMutation.isPending ||
                 replaceVideoLessonMutation.isPending
                   ? t("curriculum.saving")
                   : lessonAction.mode === "create"

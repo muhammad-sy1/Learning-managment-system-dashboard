@@ -141,6 +141,7 @@ const endpoints = {
   updateCourseStatus: (id: string | number) => `/admin/courses/${id}/status`,
   uploadLessonVideo: "/upload/lesson/video",
   uploadLessonPdf: "/upload/lesson/pdf",
+  uploadCourseThumbnail: "/upload/course/thumbnail",
   uploadCoursePromoVideo: "/upload/course/promo-video",
 
   // payouts

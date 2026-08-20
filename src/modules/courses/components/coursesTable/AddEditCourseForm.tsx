@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import FileDropzone from "@/components/ui/file-dropzone";
 import { Form } from "@/components/ui/form";
 import FormInput from "@/components/form-fields/FormInput";
 import FormSelect from "@/components/form-fields/FormSelect";
@@ -17,7 +18,10 @@ import { ICourse, ICreateCoursePayload } from "../../types/course";
 import useCreateCourse from "../../hooks/useCreateCourse";
 import useUpdateCourse from "../../hooks/useUpdateCourse";
 import { fetchCategoriesClient } from "@/modules/categories/services/categories";
-import { uploadCoursePromoVideoClient } from "../../services/courses";
+import {
+  uploadCoursePromoVideoClient,
+  uploadCourseThumbnailClient,
+} from "../../services/courses";
 import { toast } from "sonner";
 
 const levels = [
@@ -43,6 +47,7 @@ export default function AddEditCourseForm({
   const create = useCreateCourse();
   const update = useUpdateCourse();
   const [promoVideo, setPromoVideo] = useState<File | null>(null);
+  const [thumbnail, setThumbnail] = useState<File | null>(null);
   const uploadPromoMutation = useMutation({
     mutationFn: (file: File) => uploadCoursePromoVideoClient(course!.id, file),
     onSuccess: () => {
@@ -51,6 +56,15 @@ export default function AddEditCourseForm({
     },
     onError: (error: any) =>
       toast.error(error?.message || t("courseMediaUploadError")),
+  });
+  const uploadThumbnailMutation = useMutation({
+    mutationFn: (file: File) => uploadCourseThumbnailClient(course!.id, file),
+    onSuccess: () => {
+      setThumbnail(null);
+      toast.success(t("thumbnailUploaded"));
+    },
+    onError: (error: any) =>
+      toast.error(error?.message || t("thumbnailUploadError")),
   });
 
   const defaultValues: Partial<ICreateCoursePayload> = {
@@ -188,7 +202,31 @@ export default function AddEditCourseForm({
           />
 
           {course && (
-            <div className="space-y-3 rounded-md border p-3">
+            <div className="space-y-4 rounded-md border p-3">
+              <div className="space-y-2">
+                <p className="font-medium">{t("courseThumbnail")}</p>
+                <FileDropzone
+                  value={thumbnail ?? course.thumbnail}
+                  onChange={setThumbnail}
+                  accept={{ "image/*": [] }}
+                  placeholder={t("thumbnailPlaceholder")}
+                  hint={t("thumbnailHint")}
+                  disabled={uploadThumbnailMutation.isPending}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={!thumbnail || uploadThumbnailMutation.isPending}
+                  onClick={() =>
+                    thumbnail && uploadThumbnailMutation.mutate(thumbnail)
+                  }
+                >
+                  {uploadThumbnailMutation.isPending
+                    ? t("curriculum.uploading")
+                    : t("uploadThumbnail")}
+                </Button>
+              </div>
+
               <p className="font-medium">{t("coursePromoVideo")}</p>
               {course.promo_video && (
                 <video

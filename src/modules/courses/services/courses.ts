@@ -133,12 +133,55 @@ export async function uploadLessonPdfClient(lessonId: number | string, file: Fil
     }
 }
 
+export async function createPdfLessonClient(
+    sectionId: number | string,
+    payload: ICreateCourseLessonPayload,
+    file: File,
+) {
+    try {
+        const createdLesson = await createCourseLessonClient(sectionId, {
+            ...payload,
+            pdf_url: payload.pdf_url || "pending-upload",
+        });
+        const lessonId = (createdLesson as { data?: { id?: number } }).data?.id;
+
+        if (!lessonId) {
+            throw new Error("The lesson was created without an ID.");
+        }
+
+        const uploadedPdf = await uploadLessonPdfClient(lessonId, file);
+        const pdfUrl = (uploadedPdf as { data?: { url?: string } }).data?.url;
+
+        if (!pdfUrl) {
+            throw new Error("The uploaded PDF response has no URL.");
+        }
+
+        return updateCourseLessonClient(lessonId, {
+            ...payload,
+            pdf_url: pdfUrl,
+        });
+    } catch (err) {
+        throw handleApiError(err);
+    }
+}
+
 export async function uploadCoursePromoVideoClient(courseId: number | string, file: File) {
     const formData = new FormData();
     formData.append("course_id", String(courseId));
     formData.append("video", file);
     try {
         return await fetcherClient.post(endpoints.uploadCoursePromoVideo, formData);
+    } catch (err) {
+        throw handleApiError(err);
+    }
+}
+
+export async function uploadCourseThumbnailClient(courseId: number | string, file: File) {
+    const formData = new FormData();
+    formData.append("course_id", String(courseId));
+    formData.append("image", file);
+    try {
+        return await fetcherClient.post(endpoints.uploadCourseThumbnail, formData);
     } catch (err) {
         throw handleApiError(err);
     }
