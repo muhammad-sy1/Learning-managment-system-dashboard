@@ -289,9 +289,9 @@ export async function approveCourseClient(id: number | string) {
     }
 }
 
-export async function rejectCourseClient(id: number | string) {
+export async function rejectCourseClient(id: number | string, reason?: string) {
     try {
-        const response = await fetcherClient.post(endpoints.rejectCourse(id));
+        const response = await fetcherClient.post(endpoints.rejectCourse(id), { reason });
         return response;
     } catch (err) {
         throw handleApiError(err);
@@ -305,7 +305,7 @@ export async function updateCourseStatusClient(id: number | string, status: stri
         }
 
         if (status === "rejected") {
-            return await rejectCourseClient(id);
+            return await rejectCourseClient(id, reason);
         }
 
         return await fetcherClient.patch(endpoints.updateCourseStatus(id), { status, reason });

@@ -23,8 +23,9 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { TableCell } from "@/components/ui/table";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { Edit, Loader2, MoreHorizontal, PencilLine, Send, Trash2 } from "lucide-react";
+import { CheckCircle2, Edit, Loader2, MoreHorizontal, PencilLine, Send, Trash2, XCircle } from "lucide-react";
 import useAuth from "@/modules/auth/store/authStore";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -61,6 +62,8 @@ export default function CourseRowTable({ data }: { data: ICourse }) {
   const [editOpen, setEditOpen] = useState(false);
   const [statusOpen, setStatusOpen] = useState(false);
   const [submitOpen, setSubmitOpen] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState<"published" | "rejected" | null>(null);
+  const [rejectionReason, setRejectionReason] = useState("");
 
   const user = useAuth((state) => state.user?.role);
   const isInstructor = user === "student";
@@ -68,8 +71,6 @@ export default function CourseRowTable({ data }: { data: ICourse }) {
   const canSubmit =
     isInstructor &&
     (data.status === "draft" || data.status === "rejected");
-
-  const statusOptions = ["published", "rejected"] as const;
 
   const getStatusLabel = (status: string) => {
     const key = status?.replace(/\s+/g, "_") || "draft";
@@ -228,32 +229,46 @@ export default function CourseRowTable({ data }: { data: ICourse }) {
         trigger={null}
         title={t("actions.updateStatus")}
         open={statusOpen}
-        onOpenChange={setStatusOpen}
+        onOpenChange={(next) => {
+          setStatusOpen(next);
+          if (!next) {
+            setSelectedStatus(null);
+            setRejectionReason("");
+          }
+        }}
         maxWidth="md"
       >
-        <div className="space-y-4">
-          <RadioGroup
-            defaultValue={data.status === "rejected" ? "rejected" : "published"}
-            className="space-y-3"
-            onValueChange={(status) => {
-              if (!statusOptions.includes(status as (typeof statusOptions)[number])) return;
-              updateStatusMutation.mutate(
-                { id: data.id, status },
-                { onSuccess: () => setStatusOpen(false) },
-              );
-            }}
-            disabled={updateStatusMutation.isPending}
-          >
-            {statusOptions.map((status) => (
-              <div key={status} className="flex items-center gap-3 rounded-md border p-3">
-                <RadioGroupItem value={status} id={`course-${data.id}-status-${status}`} />
-                <Label htmlFor={`course-${data.id}-status-${status}`}>
-                  {getStatusLabel(status)}
-                </Label>
-              </div>
-            ))}
-          </RadioGroup>
-        </div>
+        <UpdateStatusForm
+          courseId={data.id}
+          selectedStatus={selectedStatus}
+          setSelectedStatus={setSelectedStatus}
+          rejectionReason={rejectionReason}
+          setRejectionReason={setRejectionReason}
+          getStatusLabel={getStatusLabel}
+          isPending={updateStatusMutation.isPending}
+          onSubmit={() => {
+            if (!selectedStatus) return;
+            updateStatusMutation.mutate(
+              {
+                id: data.id,
+                status: selectedStatus,
+                reason: selectedStatus === "rejected" ? rejectionReason : undefined,
+              },
+              {
+                onSuccess: (res: any) => {
+                  toast.success(res?.message || t("actions.updateStatus"));
+                  setStatusOpen(false);
+                  setSelectedStatus(null);
+                  setRejectionReason("");
+                },
+                onError: (err: any) => {
+                  toast.error(err?.message || t("actions.submitError"));
+                },
+              },
+            );
+          }}
+          t={t}
+        />
       </ResponsiveModal>
 
       {/* ── Edit modal ── */}
@@ -267,5 +282,153 @@ export default function CourseRowTable({ data }: { data: ICourse }) {
         <AddEditCourseForm course={data} onSuccess={() => setEditOpen(false)} />
       </ResponsiveModal>
     </>
+  );
+}
+
+// ─── UpdateStatusForm ─────────────────────────────────────────────────────────
+
+function UpdateStatusForm({
+  courseId,
+  selectedStatus,
+  setSelectedStatus,
+  rejectionReason,
+  setRejectionReason,
+  getStatusLabel,
+  isPending,
+  onSubmit,
+  t,
+}: {
+  courseId: number;
+  selectedStatus: "published" | "rejected" | null;
+  setSelectedStatus: (v: "published" | "rejected" | null) => void;
+  rejectionReason: string;
+  setRejectionReason: (v: string) => void;
+  getStatusLabel: (s: string) => string;
+  isPending: boolean;
+  onSubmit: () => void;
+  t: ReturnType<typeof useTranslations<"Dashboard.CoursesPage">>;
+}) {
+  const canSubmit =
+    selectedStatus !== null &&
+    (selectedStatus !== "rejected" || rejectionReason.trim().length > 0);
+
+  return (
+    <div className="space-y-5 py-1">
+      {/* Radio options — no defaultValue so nothing is pre-selected */}
+      <RadioGroup
+        value={selectedStatus ?? ""}
+        onValueChange={(v) =>
+          setSelectedStatus(v as "published" | "rejected")
+        }
+        className="space-y-3"
+        disabled={isPending}
+      >
+        {/* Approve option */}
+        <label
+          htmlFor={`status-published-${courseId}`}
+          className={cn(
+            "flex cursor-pointer items-center gap-3 rounded-lg border p-3.5 transition-colors",
+            selectedStatus === "published"
+              ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30"
+              : "border-border hover:bg-muted/50",
+          )}
+        >
+          <RadioGroupItem
+            value="published"
+            id={`status-published-${courseId}`}
+          />
+          <CheckCircle2
+            className={cn(
+              "h-4 w-4 shrink-0",
+              selectedStatus === "published"
+                ? "text-emerald-600"
+                : "text-muted-foreground",
+            )}
+          />
+          <span
+            className={cn(
+              "font-medium",
+              selectedStatus === "published"
+                ? "text-emerald-700 dark:text-emerald-400"
+                : "",
+            )}
+          >
+            {getStatusLabel("published")}
+          </span>
+        </label>
+
+        {/* Reject option */}
+        <label
+          htmlFor={`status-rejected-${courseId}`}
+          className={cn(
+            "flex cursor-pointer items-center gap-3 rounded-lg border p-3.5 transition-colors",
+            selectedStatus === "rejected"
+              ? "border-destructive bg-destructive/5"
+              : "border-border hover:bg-muted/50",
+          )}
+        >
+          <RadioGroupItem
+            value="rejected"
+            id={`status-rejected-${courseId}`}
+          />
+          <XCircle
+            className={cn(
+              "h-4 w-4 shrink-0",
+              selectedStatus === "rejected"
+                ? "text-destructive"
+                : "text-muted-foreground",
+            )}
+          />
+          <span
+            className={cn(
+              "font-medium",
+              selectedStatus === "rejected" ? "text-destructive" : "",
+            )}
+          >
+            {getStatusLabel("rejected")}
+          </span>
+        </label>
+      </RadioGroup>
+
+      {/* Rejection reason — appears only when rejected is selected */}
+      {selectedStatus === "rejected" && (
+        <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
+          <Label className="text-sm font-medium">
+            {t("status.reasonPrompt")}
+          </Label>
+          <Textarea
+            rows={3}
+            value={rejectionReason}
+            onChange={(e) => setRejectionReason(e.target.value)}
+            placeholder={t("status.reasonPrompt")}
+            className="resize-none"
+            disabled={isPending}
+          />
+        </div>
+      )}
+
+      {/* Submit button */}
+      <Button
+        className="w-full gap-2"
+        onClick={onSubmit}
+        disabled={!canSubmit || isPending}
+        variant={selectedStatus === "rejected" ? "destructive" : "default"}
+      >
+        {isPending ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : selectedStatus === "published" ? (
+          <CheckCircle2 className="h-4 w-4" />
+        ) : selectedStatus === "rejected" ? (
+          <XCircle className="h-4 w-4" />
+        ) : null}
+        {isPending
+          ? t("curriculum.saving")
+          : selectedStatus === "published"
+            ? getStatusLabel("published")
+            : selectedStatus === "rejected"
+              ? getStatusLabel("rejected")
+              : t("actions.updateStatus")}
+      </Button>
+    </div>
   );
 }
