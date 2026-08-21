@@ -6,6 +6,9 @@ import {
     ICreateCourseLessonPayload,
     ICreateCoursePayload,
     ICreateCourseSectionPayload,
+    ICreateQuizPayload,
+    ICreateQuizQuestionPayload,
+    IQuiz,
 } from "../types/course";
 
 export async function fetchMyCoursesClient() {
@@ -306,6 +309,110 @@ export async function updateCourseStatusClient(id: number | string, status: stri
         }
 
         return await fetcherClient.patch(endpoints.updateCourseStatus(id), { status, reason });
+    } catch (err) {
+        throw handleApiError(err);
+    }
+}
+
+// ──── Quiz Engine Services ────────────────────────────────────────────────
+
+/** Fetch all quizzes attached to a lesson */
+export async function fetchLessonQuizzesClient(lessonId: number | string) {
+    try {
+        return await fetcherClient.get<{ data: IQuiz[] }>(
+            endpoints.getLessonQuizzes(lessonId),
+        );
+    } catch (err) {
+        throw handleApiError(err);
+    }
+}
+
+/** Create a lesson-level (in-video / surprise) quiz */
+export async function createLessonQuizClient(
+    lessonId: number | string,
+    payload: ICreateQuizPayload,
+) {
+    try {
+        return await fetcherClient.post<{ data: IQuiz }>(
+            endpoints.createLessonQuiz(lessonId),
+            payload,
+        );
+    } catch (err) {
+        throw handleApiError(err);
+    }
+}
+
+/** Create a course-level quiz (final_exam or section_quiz) */
+export async function createCourseQuizClient(
+    courseId: number | string,
+    payload: ICreateQuizPayload,
+) {
+    try {
+        return await fetcherClient.post<{ data: IQuiz }>(
+            endpoints.createCourseQuiz(courseId),
+            payload,
+        );
+    } catch (err) {
+        throw handleApiError(err);
+    }
+}
+
+/** Fetch a quiz with all its questions and options */
+export async function fetchQuizClient(quizId: number | string) {
+    try {
+        return await fetcherClient.get<{ data: IQuiz }>(
+            endpoints.getQuiz(quizId),
+        );
+    } catch (err) {
+        throw handleApiError(err);
+    }
+}
+
+/** Delete a quiz */
+export async function deleteQuizClient(quizId: number | string) {
+    try {
+        return await fetcherClient.delete(endpoints.deleteQuiz(quizId));
+    } catch (err) {
+        throw handleApiError(err);
+    }
+}
+
+/** Add a question (with options) to a quiz */
+export async function addQuizQuestionClient(
+    quizId: number | string,
+    payload: ICreateQuizQuestionPayload,
+) {
+    try {
+        return await fetcherClient.post(
+            endpoints.addQuizQuestion(quizId),
+            payload,
+        );
+    } catch (err) {
+        throw handleApiError(err);
+    }
+}
+
+/** Update an existing question (and its options) */
+export async function updateQuizQuestionClient(
+    questionId: number | string,
+    payload: ICreateQuizQuestionPayload,
+) {
+    try {
+        return await fetcherClient.put(
+            endpoints.updateQuizQuestion(questionId),
+            payload,
+        );
+    } catch (err) {
+        throw handleApiError(err);
+    }
+}
+
+/** Delete a question */
+export async function deleteQuizQuestionClient(questionId: number | string) {
+    try {
+        return await fetcherClient.delete(
+            endpoints.deleteQuizQuestion(questionId),
+        );
     } catch (err) {
         throw handleApiError(err);
     }

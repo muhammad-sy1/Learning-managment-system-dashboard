@@ -141,6 +141,16 @@ const endpoints = {
   updateCourseStatus: (id: string | number) => `/admin/courses/${id}/status`,
   uploadLessonVideo: "/upload/lesson/video",
   uploadLessonPdf: "/upload/lesson/pdf",
+
+  // quiz engine (instructor)
+  getLessonQuizzes: (lessonId: string | number) => `/lessons/quizzes?lesson_id=${lessonId}`,
+  createLessonQuiz: (lessonId: string | number) => `/instructor/lessons/${lessonId}/quizzes`,
+  createCourseQuiz: (courseId: string | number) => `/instructor/courses/${courseId}/quizzes`,
+  getQuiz: (quizId: string | number) => `/instructor/quizzes/${quizId}`,
+  deleteQuiz: (quizId: string | number) => `/instructor/quizzes/${quizId}`,
+  addQuizQuestion: (quizId: string | number) => `/instructor/quizzes/${quizId}/questions`,
+  updateQuizQuestion: (questionId: string | number) => `/instructor/questions/${questionId}`,
+  deleteQuizQuestion: (questionId: string | number) => `/instructor/questions/${questionId}`,
   uploadCourseThumbnail: "/upload/course/thumbnail",
   uploadCoursePromoVideo: "/upload/course/promo-video",
 

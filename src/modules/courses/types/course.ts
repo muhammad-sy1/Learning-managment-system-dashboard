@@ -76,3 +76,58 @@ export interface ICreateCourseLessonPayload {
     order_index?: number | null;
 }
 
+
+// ──── Quiz Engine Types ────────────────────────────────────────────────────
+
+export type QuizType = "final_exam" | "section_quiz" | "surprise";
+export type QuestionType = "mcq" | "true_false";
+
+export interface IQuizOption {
+    id: number;
+    text: string;
+    is_correct: boolean;
+}
+
+export interface IQuizQuestion {
+    id: number;
+    text: string;
+    type: QuestionType;
+    explanation?: string | null;
+    options: IQuizOption[];
+}
+
+export interface IQuiz {
+    id: number;
+    type: QuizType;
+    title?: string | null;
+    passing_score?: number | null;
+    time_limit_seconds?: number | null;
+    max_attempts?: number | null;
+    pool_size?: number | null;
+    section_id?: number | null;
+    lesson_id?: number | null;
+    questions?: IQuizQuestion[];
+}
+
+export interface ICreateQuizPayload {
+    type: QuizType;
+    title?: string;
+    passing_score?: number;
+    time_limit_seconds?: number;
+    max_attempts?: number;
+    pool_size?: number;
+    section_id?: number;
+    trigger_second?: number;
+}
+
+export interface IQuizOptionPayload {
+    text: string;
+    is_correct: boolean;
+}
+
+export interface ICreateQuizQuestionPayload {
+    text: string;
+    type: QuestionType;
+    explanation?: string;
+    options: IQuizOptionPayload[];
+}

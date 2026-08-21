@@ -4,8 +4,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AlertCircle,
   BookOpen,
-  FileText,
+  ClipboardList,
   ExternalLink,
+  FileText,
   Layers3,
   Pencil,
   Plus,
@@ -53,6 +54,7 @@ import {
 } from "../../services/courses";
 import { AreYouSureDeleteing } from "@/components/AreYouSureDeleteing";
 import useAuth from "@/modules/auth/store/authStore";
+import QuizLessonModal from "./QuizLessonModal";
 
 const lessonTypes = [
   { value: "video", label: "Video" },
@@ -641,17 +643,26 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
                         className="rounded-md border bg-muted/20 p-2"
                       >
                         <div className="flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-2 text-sm font-medium">
+                          <div className="flex items-center gap-2 text-sm font-medium min-w-0">
                             {lesson.type === "video" ? (
-                              <Video className="h-3.5 w-3.5" />
+                              <Video className="h-3.5 w-3.5 shrink-0 text-blue-500" />
                             ) : lesson.type === "pdf" ? (
-                              <FileText className="h-3.5 w-3.5" />
+                              <FileText className="h-3.5 w-3.5 shrink-0 text-orange-500" />
+                            ) : lesson.type === "quiz" ? (
+                              <ClipboardList className="h-3.5 w-3.5 shrink-0 text-violet-500" />
                             ) : (
-                              <AlertCircle className="h-3.5 w-3.5" />
+                              <AlertCircle className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
                             )}
-                            {lesson.title}
+                            <span className="truncate">{lesson.title}</span>
                           </div>
-                          <div className="flex items-center gap-2">
+                          <div className="flex shrink-0 items-center gap-1.5">
+                            {lesson.type === "quiz" && (
+                              <QuizLessonModal
+                                lesson={lesson}
+                                courseId={course.id}
+                                curriculumQueryKey={curriculumQueryKey}
+                              />
+                            )}
                             <Button
                               type="button"
                               size="sm"
@@ -684,7 +695,7 @@ export default function CourseCurriculumModal({ course }: { course: ICourse }) {
                           </div>
                         </div>
                         <div className="mt-2 flex flex-wrap gap-2 text-[11px] text-muted-foreground">
-                          <span>{lesson.type}</span>
+                          <span className="capitalize">{lesson.type}</span>
                           {lesson.duration ? (
                             <span>{lesson.duration} min</span>
                           ) : null}
