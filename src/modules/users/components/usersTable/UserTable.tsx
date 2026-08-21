@@ -11,7 +11,7 @@ import {
   IdCard,
   Mail,
   Percent,
-  Phone,
+  // Phone,
   Receipt,
   Settings,
   Shuffle,
@@ -207,8 +207,7 @@ function UserTable({
           },
         ]
       : []),
-    { Icon: <UserPen className="h-4 w-4" />, label: tHeaders("first_name") },
-    { Icon: <UserPen className="h-4 w-4" />, label: tHeaders("last_name") },
+    { Icon: <UserPen className="h-4 w-4" />, label: tHeaders("name") },
     { Icon: <Mail className="h-4 w-4" />, label: tHeaders("email") },
     // { Icon: <BookIcon className="h-4 w-4" />, label: tHeaders("bio") },
     ...(role === "MERCHANT"
@@ -299,8 +298,8 @@ function UserTable({
           },
         ]
       : []),
-    { Icon: <Phone className="h-4 w-4" />, label: tHeaders("statusBlocked") },
-    { Icon: <Phone className="h-4 w-4" />, label: tHeaders("phone") },
+    // { Icon: <Phone className="h-4 w-4" />, label: tHeaders("statusBlocked") },
+    // { Icon: <Phone className="h-4 w-4" />, label: tHeaders("phone") },
 
     { Icon: <Calendar className="h-4 w-4" />, label: tHeaders("createdAt") },
   ];

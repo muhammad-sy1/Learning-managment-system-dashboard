@@ -1247,6 +1247,10 @@
         "reasonPrompt": "Please provide the rejection reason:"
       },
       "curriculum": {
+        "videoFile": "Video file",
+        "videoDropzoneHint": "Video files only. The link and duration are filled automatically.",
+        "videoDropzonePlaceholder": "Drop the lesson video here or browse",
+        "durationFromVideo": "Enter the video duration in minutes",
         "button": "Curriculum",
         "title": "Curriculum for {course}",
         "description": "Add, edit, and remove course sections and lessons.",
