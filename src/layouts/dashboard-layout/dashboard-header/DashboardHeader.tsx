@@ -1,19 +1,19 @@
 import Logo from "@/components/Logo";
-import NavLink from "@/components/NavLink";
-import { Button } from "@/components/ui/button";
+// import NavLink from "@/components/NavLink";
+// import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import LanguageSwitcher from "@/layouts/dashboard-layout/dashboard-header/LanguageSwitcher";
 import ThemeModeSwitcher from "@/layouts/dashboard-layout/dashboard-header/ThemeModeSwitcher";
-import { BellIcon, Search } from "lucide-react";
+// import { BellIcon, Search } from "lucide-react";
 import BackButton from "./BackButton";
 import RefreshDataButton from "./RefreshDataButton";
 import UserDropdown from "./UserDropdown";
-import { useFocusStore } from "@/modules/auth/store/useFocusStore";
-import useNotificationsStore from "@/store/useNotificationsStore";
+// import { useFocusStore } from "@/modules/auth/store/useFocusStore";
+// import useNotificationsStore from "@/store/useNotificationsStore";
 export default function DashboardHeader() {
-   const { setFocusField } = useFocusStore();
-   const { unreadCount, clearUnread } = useNotificationsStore();
+  //  const { setFocusField } = useFocusStore();
+  //  const { unreadCount, clearUnread } = useNotificationsStore();
 
   return (
     <header className="sticky  top-0  z-50 ">
@@ -34,7 +34,7 @@ export default function DashboardHeader() {
         <div className=" gap-4 flex items-center">
           <ThemeModeSwitcher />
           <LanguageSwitcher />
-          <NavLink
+          {/* <NavLink
             href="/dashboard/notifications"
             className="flex justify-center  relative items-center"
           >
@@ -46,8 +46,8 @@ export default function DashboardHeader() {
                 </span>
               )}
             </Button>
-          </NavLink>
-          <NavLink
+          </NavLink> */}
+          {/* <NavLink
             href={`/dashboard/products`}
             className="flex justify-center items-center"
           >
@@ -58,7 +58,7 @@ export default function DashboardHeader() {
             >
               <Search className="!h-4 !w-4" />
             </Button>
-          </NavLink>
+          </NavLink> */}
           <BackButton />
           <RefreshDataButton />
           <UserDropdown />

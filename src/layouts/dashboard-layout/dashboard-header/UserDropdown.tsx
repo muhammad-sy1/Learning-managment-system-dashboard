@@ -8,20 +8,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useRouter } from "@/i18n/navigation";
+// import { useRouter } from "@/i18n/navigation";
 import LogoutButton from "@/modules/auth/components/LogoutButton";
 import useAuth from "@/modules/auth/store/authStore";
-import { User } from "lucide-react";
+// import { User } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 export default function UserDropdown() {
   const auth = useAuth();
-  const router = useRouter();
+  // const router = useRouter();
   const t = useTranslations("UserDropdown");
 
-  const handleVisitProfile = () => {
-    router.push("/dashboard/profile");
-  };
+  // const handleVisitProfile = () => {
+    // router.push("/dashboard/profile");
+  // };
 
   return (
     <DropdownMenu>
@@ -62,14 +62,14 @@ export default function UserDropdown() {
           </div>
         </div>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
+        {/* <DropdownMenuItem
           onClick={handleVisitProfile}
           className="cursor-pointer flex items-center space-x-2 p-2 rounded-md hover:bg-accent transition-colors"
         >
           <User className="h-4 w-4" />
           <span>{t("visitProfile")}</span>
         </DropdownMenuItem>
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator /> */}
         <DropdownMenuItem asChild>
           <LogoutButton />
         </DropdownMenuItem>

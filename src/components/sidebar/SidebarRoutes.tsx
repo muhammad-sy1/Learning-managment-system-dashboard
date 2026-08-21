@@ -14,7 +14,7 @@ import {
   // MessageSquare,
   // Package,
   // Paperclip,
-  Settings,
+  // Settings,
   Shield,
   Signal,
   // Star,
@@ -34,7 +34,7 @@ export function SidebarRoutes(): MenuItem[] {
   // const hasPermission = usePermissionStore((state) => state.hasPermission);
   const user = useAuth((state) => state?.user);
   // const isSuperAdmin =
-  console.log("user?.is_instructor", user?.is_instructor);
+  // console.log("user?.is_instructor", user?.is_instructor);
 
   const routes: MenuItem[] = [
     // Home
@@ -43,7 +43,7 @@ export function SidebarRoutes(): MenuItem[] {
       label: t("navigation.home"),
       icon: Home,
     },
-    ...(user?.is_instructor
+    ...(!user?.is_instructor
       ? [
           {
             href: "/dashboard/analytics",
@@ -52,12 +52,6 @@ export function SidebarRoutes(): MenuItem[] {
           },
         ]
       : []),
-    {
-      // id: "analytics",
-      href: "/dashboard/analytics",
-      label: t("navigation.analytics"),
-      icon: Signal,
-    },
     {
       href: "/dashboard/courses",
       label: t("navigation.courses"),
@@ -75,39 +69,55 @@ export function SidebarRoutes(): MenuItem[] {
     },
 
     // Users
-    {
-      label: t("navigation.users"),
-      icon: Users,
-      menuType: "users",
-      children: [
-        {
-          id: "students",
-          href: "/dashboard/users",
-          label: t("navigation.students"),
-          icon: User,
-          searchParams: { role: "STUDENT", page: "1" },
-        },
-        {
-          id: "instructors",
-          href: "/dashboard/users",
-          label: t("navigation.instructors"),
-          icon: Store,
-          searchParams: { is_instructor: "1", role: "STUDENT", page: "1" },
-        },
-        {
-          id: "admins",
-          href: "/dashboard/users",
-          label: t("navigation.admins"),
-          icon: Shield,
-          searchParams: { role: "ADMIN", page: "1" },
-        },
-      ],
-    },
-    {
-      href: "/dashboard/settings",
-      label: t("navigation.settings"),
-      icon: Settings,
-    },
+    ...(!user?.is_instructor
+      ? [
+          {
+            label: t("navigation.users"),
+            icon: Users,
+            menuType: "users",
+            children: [
+              {
+                id: "instructors",
+                href: "/dashboard/users",
+                label: t("navigation.instructors"),
+                icon: Store,
+                searchParams: {
+                  is_instructor: "1",
+                  role: "STUDENT",
+                  page: "1",
+                },
+              },
+              {
+                id: "admins",
+                href: "/dashboard/users",
+                label: t("navigation.admins"),
+                icon: Shield,
+                searchParams: { role: "ADMIN", page: "1" },
+              },
+              {
+                id: "students",
+                href: "/dashboard/users",
+                label: t("navigation.students"),
+                icon: User,
+                searchParams: { role: "STUDENT", page: "1" },
+              },
+            ],
+          },
+        ]
+      : [
+          {
+            id: "students",
+            href: "/dashboard/instructor-students",
+            label: t("navigation.students"),
+            icon: User,
+            searchParams: { role: "STUDENT", page: "1" },
+          },
+        ]),
+    // {
+    //   href: "/dashboard/settings",
+    //   label: t("navigation.settings"),
+    //   icon: Settings,
+    // },
   ];
 
   return routes;

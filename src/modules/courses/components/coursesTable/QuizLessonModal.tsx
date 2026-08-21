@@ -103,7 +103,7 @@ interface QuizLessonModalProps {
 
 export default function QuizLessonModal({
   lesson,
-  courseId,
+  // courseId,
   curriculumQueryKey,
 }: QuizLessonModalProps) {
   const t = useTranslations("Dashboard.CoursesPage");
