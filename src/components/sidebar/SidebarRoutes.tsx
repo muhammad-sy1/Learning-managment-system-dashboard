@@ -45,10 +45,15 @@ export function SidebarRoutes(): MenuItem[] {
     },
     ...(!user?.is_instructor
       ? [
+          // {
+          //   href: "/dashboard/analytics",
+          //   label: t("navigation.analytics"),
+          //   icon: Signal,
+          // },
           {
-            href: "/dashboard/analytics",
-            label: t("navigation.analytics"),
-            icon: Signal,
+            href: "/dashboard/categories",
+            label: t("navigation.categories"),
+            icon: Folder,
           },
         ]
       : []),
@@ -61,11 +66,6 @@ export function SidebarRoutes(): MenuItem[] {
       href: "/dashboard/payout-requests",
       label: t("navigation.payoutRequests"),
       icon: WalletCards,
-    },
-    {
-      href: "/dashboard/categories",
-      label: t("navigation.categories"),
-      icon: Folder,
     },
 
     // Users

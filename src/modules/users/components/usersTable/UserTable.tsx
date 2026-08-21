@@ -311,27 +311,27 @@ function UserTable({
           titleIcon={<Users className="h-5 w-5 text-primary" />}
           title={config?.title}
           headers={TABLE_HEADERS}
-          actionButton={
-            <ResponsiveModal
-              trigger={
-                <Button variant="premium">
-                  <UserPlus className="mr-2 h-4 w-4" />
-                  <span>{config?.createLabel}</span>
-                </Button>
-              }
-              title={config?.createLabel}
-              description={config?.description}
-              open={addUserModalOpen}
-              onOpenChange={setAddUserModalOpen}
-              maxWidth="2xl"
-              height="auto"
-            >
-              <AddUserForm
-                onSuccess={() => setAddUserModalOpen(false)}
-                configTranslate={config || {}}
-              />
-            </ResponsiveModal>
-          }
+          // actionButton={
+          //   <ResponsiveModal
+          //     trigger={
+          //       <Button variant="premium">
+          //         <UserPlus className="mr-2 h-4 w-4" />
+          //         <span>{config?.createLabel}</span>
+          //       </Button>
+          //     }
+          //     title={config?.createLabel}
+          //     description={config?.description}
+          //     open={addUserModalOpen}
+          //     onOpenChange={setAddUserModalOpen}
+          //     maxWidth="2xl"
+          //     height="auto"
+          //   >
+          //     <AddUserForm
+          //       onSuccess={() => setAddUserModalOpen(false)}
+          //       configTranslate={config || {}}
+          //     />
+          //   </ResponsiveModal>
+          // }
           data={users?.data || []}
           isPending={isPending}
           caption={config?.caption}
