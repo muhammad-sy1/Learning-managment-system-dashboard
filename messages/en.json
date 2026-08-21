@@ -1426,6 +1426,23 @@
         "reject": "Reject"
       }
     },
+    "InstructorStudentsPage": {
+      "title": "My Students",
+      "description": "View all students enrolled in your courses",
+      "headers": {
+        "id": "ID",
+        "student": "Student",
+        "email": "Email",
+        "course": "Course",
+        "completion": "Completion",
+        "enrolledAt": "Enrolled At",
+        "lastAccessed": "Last Accessed",
+        "actions": "Actions"
+      },
+      "notAvailable": "N/A",
+      "neverAccessed": "Never accessed",
+      "completionSuffix": "%"
+    },
     "ChatsPage": {
       "title": "Manage Conversations",
       "pageDescription": "View and manage customer support conversations",

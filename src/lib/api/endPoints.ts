@@ -144,6 +144,9 @@ const endpoints = {
 
   // quiz engine (instructor)
   getLessonQuizzes: (lessonId: string | number) => `/lessons/quizzes?lesson_id=${lessonId}`,
+
+  // instructor students
+  getInstructorStudents: "/instructor/students",
   createLessonQuiz: (lessonId: string | number) => `/instructor/lessons/${lessonId}/quizzes`,
   createCourseQuiz: (courseId: string | number) => `/instructor/courses/${courseId}/quizzes`,
   getQuiz: (quizId: string | number) => `/instructor/quizzes/${quizId}`,

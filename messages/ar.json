@@ -1138,6 +1138,23 @@
         "deleteConfirmDescription": "هل أنت متأكد أنك تريد حذف هذه الدورة؟ هذا الإجراء لا يمكن التراجع عنه."
       }
     },
+    "InstructorStudentsPage": {
+      "title": "طلابي",
+      "description": "عرض جميع الطلاب المسجلين في دوراتك التدريبية",
+      "headers": {
+        "id": "المعرف",
+        "student": "الطالب",
+        "email": "البريد الإلكتروني",
+        "course": "الدورة",
+        "completion": "نسبة الإنجاز",
+        "enrolledAt": "تاريخ التسجيل",
+        "lastAccessed": "آخر دخول",
+        "actions": "الإجراءات"
+      },
+      "notAvailable": "غير متوفر",
+      "neverAccessed": "لم يدخل بعد",
+      "completionSuffix": "%"
+    },
     "ChatsPage": {
       "title": "إدارة المحادثات",
       "pageDescription": "عرض وإدارة محادثات العملاء مع الدعم",
