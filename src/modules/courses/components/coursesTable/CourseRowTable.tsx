@@ -5,6 +5,14 @@ import { ResponsiveModal } from "@/components/ResponsiveModal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -12,19 +20,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { TableCell } from "@/components/ui/table";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { usePermissionStore } from "@/hooks/usePermissionStore";
-import { Edit, MoreHorizontal, PencilLine, Trash2 } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { TableCell } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
+import { Edit, Loader2, MoreHorizontal, PencilLine, Send, Trash2 } from "lucide-react";
+import useAuth from "@/modules/auth/store/authStore";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { toast } from "sonner";
 import useDeleteCourse from "../../hooks/useDeleteCourse";
+import useSubmitCourse from "../../hooks/useSubmitCourse";
 import useUpdateCourseStatus from "../../hooks/useUpdateCourseStatus";
 import { ICourse } from "../../types/course";
 import AddEditCourseForm from "./AddEditCourseForm";
 import CourseCurriculumModal from "./CourseCurriculumModal";
-import useAuth from "@/modules/auth/store/authStore";
 
 const COURSE_STATUS_VARIANTS: Record<
   string,
@@ -44,18 +54,40 @@ const COURSE_STATUS_VARIANTS: Record<
 
 export default function CourseRowTable({ data }: { data: ICourse }) {
   const t = useTranslations("Dashboard.CoursesPage");
-  const { mutate: remove, isPending } = useDeleteCourse();
+  const { mutate: remove, isPending: isDeleting } = useDeleteCourse();
   const updateStatusMutation = useUpdateCourseStatus();
-  const [open, setOpen] = useState(false);
+  const submitMutation = useSubmitCourse();
+
+  const [editOpen, setEditOpen] = useState(false);
   const [statusOpen, setStatusOpen] = useState(false);
+  const [submitOpen, setSubmitOpen] = useState(false);
+
   const user = useAuth((state) => state.user?.role);
   const isInstructor = user === "student";
+
+  const canSubmit =
+    isInstructor &&
+    (data.status === "draft" || data.status === "rejected");
 
   const statusOptions = ["published", "rejected"] as const;
 
   const getStatusLabel = (status: string) => {
     const key = status?.replace(/\s+/g, "_") || "draft";
     return t(`statuses.${key}`) || status;
+  };
+
+  const handleSubmit = () => {
+    submitMutation.mutate(data.id, {
+      onSuccess: (res: any) => {
+        const msg = res?.message || t("actions.submitSuccess");
+        toast.success(msg);
+        setSubmitOpen(false);
+      },
+      onError: (err: any) => {
+        const msg = err?.message || t("actions.submitError");
+        toast.error(msg);
+      },
+    });
   };
 
   return (
@@ -75,6 +107,7 @@ export default function CourseRowTable({ data }: { data: ICourse }) {
               <DropdownMenuLabel>{t("actions.actions")}</DropdownMenuLabel>
               <DropdownMenuSeparator />
 
+              {/* Admin only: update status */}
               {!isInstructor && (
                 <DropdownMenuItem onSelect={() => setStatusOpen(true)}>
                   <PencilLine className="mr-2 h-4 w-4" />
@@ -82,7 +115,18 @@ export default function CourseRowTable({ data }: { data: ICourse }) {
                 </DropdownMenuItem>
               )}
 
-              <DropdownMenuItem onSelect={() => setOpen(true)}>
+              {/* Instructor only: submit for review */}
+              {canSubmit && (
+                <>
+                  <DropdownMenuItem onSelect={() => setSubmitOpen(true)}>
+                    <Send className="mr-2 h-4 w-4 text-primary" />
+                    <span className="text-primary">{t("actions.submitForReview")}</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                </>
+              )}
+
+              <DropdownMenuItem onSelect={() => setEditOpen(true)}>
                 <Edit className="mr-2 h-4 w-4" />
                 {t("actions.edit")}
               </DropdownMenuItem>
@@ -105,13 +149,14 @@ export default function CourseRowTable({ data }: { data: ICourse }) {
                   title={t("deleteConfirmTitle")}
                   description={t("deleteConfirmDescription")}
                   onAccept={() => remove(data.id)}
-                  isLoading={isPending}
+                  isLoading={isDeleting}
                 />
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </TableCell>
+
       <TableCell className="py-4 px-4">{data.title}</TableCell>
       <TableCell className="py-4 px-4">
         <Badge variant={COURSE_STATUS_VARIANTS[data.status] ?? "default"}>
@@ -130,6 +175,55 @@ export default function CourseRowTable({ data }: { data: ICourse }) {
       <TableCell className="py-4 px-4">{data.average_rating ?? 0}</TableCell>
       <TableCell className="py-4 px-4">{data.created_at}</TableCell>
 
+      {/* ── Submit for review dialog ── */}
+      <Dialog open={submitOpen} onOpenChange={setSubmitOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="mx-auto mb-2 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+              <Send className="h-6 w-6 text-primary" />
+            </div>
+            <DialogTitle className="text-center">
+              {t("actions.submitConfirmTitle")}
+            </DialogTitle>
+            <DialogDescription className="text-center leading-relaxed">
+              {t("actions.submitConfirmDescription")}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-primary">
+            <p className="font-medium">{data.title}</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              {getStatusLabel(data.status)}
+            </p>
+          </div>
+
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              variant="outline"
+              onClick={() => setSubmitOpen(false)}
+              disabled={submitMutation.isPending}
+            >
+              {t("actions.cancel")}
+            </Button>
+            <Button
+              onClick={handleSubmit}
+              disabled={submitMutation.isPending}
+              className="gap-2"
+            >
+              {submitMutation.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4" />
+              )}
+              {submitMutation.isPending
+                ? t("actions.cancel")
+                : t("actions.submitForReview")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* ── Update status modal (admin) ── */}
       <ResponsiveModal
         trigger={null}
         title={t("actions.updateStatus")}
@@ -142,14 +236,7 @@ export default function CourseRowTable({ data }: { data: ICourse }) {
             defaultValue={data.status === "rejected" ? "rejected" : "published"}
             className="space-y-3"
             onValueChange={(status) => {
-              if (
-                !statusOptions.includes(
-                  status as (typeof statusOptions)[number],
-                )
-              ) {
-                return;
-              }
-
+              if (!statusOptions.includes(status as (typeof statusOptions)[number])) return;
               updateStatusMutation.mutate(
                 { id: data.id, status },
                 { onSuccess: () => setStatusOpen(false) },
@@ -158,14 +245,8 @@ export default function CourseRowTable({ data }: { data: ICourse }) {
             disabled={updateStatusMutation.isPending}
           >
             {statusOptions.map((status) => (
-              <div
-                key={status}
-                className="flex items-center gap-3 rounded-md border p-3"
-              >
-                <RadioGroupItem
-                  value={status}
-                  id={`course-${data.id}-status-${status}`}
-                />
+              <div key={status} className="flex items-center gap-3 rounded-md border p-3">
+                <RadioGroupItem value={status} id={`course-${data.id}-status-${status}`} />
                 <Label htmlFor={`course-${data.id}-status-${status}`}>
                   {getStatusLabel(status)}
                 </Label>
@@ -175,14 +256,15 @@ export default function CourseRowTable({ data }: { data: ICourse }) {
         </div>
       </ResponsiveModal>
 
+      {/* ── Edit modal ── */}
       <ResponsiveModal
         trigger={null}
         title={t("actions.edit")}
-        open={open}
-        onOpenChange={setOpen}
+        open={editOpen}
+        onOpenChange={setEditOpen}
         maxWidth="md"
       >
-        <AddEditCourseForm course={data} onSuccess={() => setOpen(false)} />
+        <AddEditCourseForm course={data} onSuccess={() => setEditOpen(false)} />
       </ResponsiveModal>
     </>
   );

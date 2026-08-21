@@ -8,7 +8,7 @@ export default function useSubmitCourse() {
     return useMutation({
         mutationFn: (id: number | string) => submitCourseClient(id),
         onSuccess() {
-            client.invalidateQueries([COURSES_TABLE_QUERY_KEY]);
+            client.invalidateQueries({ queryKey: [COURSES_TABLE_QUERY_KEY] });
         },
     });
 }

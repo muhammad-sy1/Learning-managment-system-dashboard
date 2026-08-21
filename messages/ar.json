@@ -973,7 +973,12 @@
         "delete": "حذف",
         "cancel": "إلغاء",
         "actions": "الإجراءات",
-        "updateStatus": "تحديث الحالة"
+        "updateStatus": "تحديث الحالة",
+        "submitForReview": "إرسال للمراجعة",
+        "submitConfirmTitle": "إرسال الكورس للمراجعة؟",
+        "submitConfirmDescription": "هل أكملت كل تفاصيل الكورس ومتأكد من الإرسال؟ سيتم إرسال الكورس للمسؤول للموافقة عليه.",
+        "submitSuccess": "تم إرسال الكورس بنجاح",
+        "submitError": "فشل في إرسال الكورس"
       },
       "status": {
         "reasonPrompt": "يرجى إدخال سبب الرفض:"

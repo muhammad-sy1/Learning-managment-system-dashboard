@@ -1241,7 +1241,12 @@
         "delete": "Delete",
         "cancel": "Cancel",
         "actions": "Actions",
-        "updateStatus": "Update status"
+        "updateStatus": "Update status",
+        "submitForReview": "Submit for review",
+        "submitConfirmTitle": "Submit course for review?",
+        "submitConfirmDescription": "Have you completed all course details and are you sure you want to submit? The course will be sent to the admin for approval.",
+        "submitSuccess": "Course submitted successfully",
+        "submitError": "Failed to submit course"
       },
       "status": {
         "reasonPrompt": "Please provide the rejection reason:"
