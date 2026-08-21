@@ -16,7 +16,7 @@ export default function LocaleEntry() {
 
   return (
     <div>
-      <LandingPage />
+      {/* <LandingPage /> */}
     </div>
   );
   // or your <Loading/>

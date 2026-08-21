@@ -147,6 +147,7 @@ const endpoints = {
 
   // instructor students
   getInstructorStudents: "/instructor/students",
+  getInstructorDashboard: "/instructor/dashboard",
   createLessonQuiz: (lessonId: string | number) => `/instructor/lessons/${lessonId}/quizzes`,
   createCourseQuiz: (courseId: string | number) => `/instructor/courses/${courseId}/quizzes`,
   getQuiz: (quizId: string | number) => `/instructor/quizzes/${quizId}`,

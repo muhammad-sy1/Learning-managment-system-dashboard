@@ -1138,6 +1138,35 @@
         "deleteConfirmDescription": "هل أنت متأكد أنك تريد حذف هذه الدورة؟ هذا الإجراء لا يمكن التراجع عنه."
       }
     },
+    "InstructorDashboard": {
+      "title": "لوحة تحكم المدرّس",
+      "description": "نظرة شاملة على أدائك التعليمي",
+      "loadError": "تعذّر تحميل بيانات لوحة التحكم. يرجى المحاولة مجدداً.",
+      "retry": "إعادة المحاولة",
+      "stats": {
+        "totalStudents": "إجمالي الطلاب",
+        "totalEnrollments": "إجمالي التسجيلات",
+        "averageRating": "متوسط التقييم",
+        "avgCompletion": "متوسط الإنجاز",
+        "completionHint": "عبر جميع الطلاب المسجلين"
+      },
+      "earnings": {
+        "title": "الأرباح",
+        "description": "تفاصيل إيراداتك",
+        "totalEarned": "إجمالي المكتسب",
+        "pendingBalance": "الرصيد المعلّق",
+        "paidOut": "المدفوع"
+      },
+      "courses": {
+        "title": "مسار الدورات",
+        "description": "توزيع حالات دوراتك التدريبية",
+        "total": "الإجمالي",
+        "published": "منشورة",
+        "draft": "مسودة",
+        "pending": "قيد المراجعة",
+        "rejected": "مرفوضة"
+      }
+    },
     "InstructorStudentsPage": {
       "title": "طلابي",
       "description": "عرض جميع الطلاب المسجلين في دوراتك التدريبية",

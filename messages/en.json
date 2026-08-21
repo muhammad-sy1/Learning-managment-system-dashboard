@@ -1426,6 +1426,35 @@
         "reject": "Reject"
       }
     },
+    "InstructorDashboard": {
+      "title": "Instructor Dashboard",
+      "description": "Your teaching performance at a glance",
+      "loadError": "Unable to load dashboard data. Please try again.",
+      "retry": "Retry",
+      "stats": {
+        "totalStudents": "Total Students",
+        "totalEnrollments": "Total Enrollments",
+        "averageRating": "Average Rating",
+        "avgCompletion": "Avg. Completion",
+        "completionHint": "across all enrolled students"
+      },
+      "earnings": {
+        "title": "Earnings",
+        "description": "Your revenue breakdown",
+        "totalEarned": "Total Earned",
+        "pendingBalance": "Pending Balance",
+        "paidOut": "Paid Out"
+      },
+      "courses": {
+        "title": "Course Pipeline",
+        "description": "Status breakdown of your courses",
+        "total": "Total",
+        "published": "Published",
+        "draft": "Draft",
+        "pending": "Pending Review",
+        "rejected": "Rejected"
+      }
+    },
     "InstructorStudentsPage": {
       "title": "My Students",
       "description": "View all students enrolled in your courses",
