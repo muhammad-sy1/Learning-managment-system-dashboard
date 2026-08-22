@@ -41,9 +41,7 @@ export default function UserRowTable({
 
       <TableCell>{data.email}</TableCell>
 
-      <TableCell>
-        {formatUtcToLocal(data.created_at)}
-      </TableCell>
+      <TableCell>{formatUtcToLocal(data.created_at)}</TableCell>
     </>
   );
 }

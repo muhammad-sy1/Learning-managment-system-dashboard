@@ -1,5 +1,4 @@
 "use client";
-import { ResponsiveModal } from "@/components/ResponsiveModal";
 import ReusableTable from "@/components/reusable-table/ReusableTable";
 import ReusableTooltip from "@/components/ReusableTooltip";
 import { Button } from "@/components/ui/button";
@@ -11,22 +10,18 @@ import {
   IdCard,
   Mail,
   Percent,
-  // Phone,
   Receipt,
   Settings,
   Shuffle,
   Truck,
   UserPen,
-  UserPlus,
   Users,
   Wallet,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
 import { MdManageAccounts } from "react-icons/md";
 import { useGetUsers } from "../../hooks/useGetUsers";
-import AddUserForm from "./AddUserForm";
 import UserRowTable from "./UserRowTable";
 
 function UserTable({
@@ -36,7 +31,6 @@ function UserTable({
   roleFromProps?: string;
   isInstructor?: boolean;
 }) {
-  const [addUserModalOpen, setAddUserModalOpen] = useState(false);
   const searchParams = useSearchParams();
 
   const rawQueryRole = searchParams.get("role");
@@ -65,7 +59,6 @@ function UserTable({
       createLabel: string;
       description: string;
       caption: string;
-      // permission: permissionType;
       status: string;
       blocked: string;
       unblocked: string;
@@ -106,7 +99,6 @@ function UserTable({
       openWebsiteMissingConfig: tStudent("openWebsiteMissingConfig"),
     },
     INSTRUCTOR: {
-      // permission: "merchants",
       title: tInstructor("title"),
       status: tInstructor("status"),
       blocked: tInstructor("blocked"),
@@ -311,27 +303,6 @@ function UserTable({
           titleIcon={<Users className="h-5 w-5 text-primary" />}
           title={config?.title}
           headers={TABLE_HEADERS}
-          // actionButton={
-          //   <ResponsiveModal
-          //     trigger={
-          //       <Button variant="premium">
-          //         <UserPlus className="mr-2 h-4 w-4" />
-          //         <span>{config?.createLabel}</span>
-          //       </Button>
-          //     }
-          //     title={config?.createLabel}
-          //     description={config?.description}
-          //     open={addUserModalOpen}
-          //     onOpenChange={setAddUserModalOpen}
-          //     maxWidth="2xl"
-          //     height="auto"
-          //   >
-          //     <AddUserForm
-          //       onSuccess={() => setAddUserModalOpen(false)}
-          //       configTranslate={config || {}}
-          //     />
-          //   </ResponsiveModal>
-          // }
           data={users?.data || []}
           isPending={isPending}
           caption={config?.caption}
