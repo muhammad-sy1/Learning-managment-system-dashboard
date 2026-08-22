@@ -22,6 +22,7 @@ import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { MdManageAccounts } from "react-icons/md";
 import { useGetUsers } from "../../hooks/useGetUsers";
+import InstructorRequestsTable from "./InstructorRequestsTable";
 import UserRowTable from "./UserRowTable";
 
 function UserTable({
@@ -327,6 +328,11 @@ function UserTable({
           )}
         />
       </div>
+
+      {/* Instructor join requests — only visible on the instructors tab */}
+      {mappedKey === "INSTRUCTOR" && (
+        <InstructorRequestsTable enabled={mappedKey === "INSTRUCTOR"} />
+      )}
     </div>
   );
 }

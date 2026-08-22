@@ -1172,6 +1172,34 @@
         "rejected": "مرفوضة"
       }
     },
+    "InstructorRequestsPage": {
+      "title": "طلبات الانضمام كمدرّس",
+      "description": "مراجعة طلبات الانضمام والرد عليها",
+      "empty": "لا توجد طلبات معلمين معلّقة.",
+      "headers": {
+        "id": "المعرف",
+        "name": "الاسم",
+        "email": "البريد الإلكتروني",
+        "title": "المسمى الوظيفي",
+        "bio": "النبذة",
+        "appliedAt": "تاريخ التقديم",
+        "actions": "الإجراءات"
+      },
+      "reviewAction": "مراجعة",
+      "dialogTitle": "مراجعة طلب المدرّس",
+      "dialogDescription": "اختر الموافقة على طلب الانضمام أو رفضه.",
+      "approve": "موافقة",
+      "reject": "رفض",
+      "rejectReasonLabel": "سبب الرفض",
+      "rejectReasonPlaceholder": "أدخل سبب الرفض...",
+      "rejectReasonRequired": "يرجى إدخال سبب الرفض.",
+      "sendBtn": "إرسال",
+      "approveSuccess": "تمت الموافقة على المدرّس بنجاح",
+      "rejectSuccess": "تم رفض المدرّس بنجاح",
+      "approveError": "فشل في الموافقة على المدرّس",
+      "rejectError": "فشل في رفض المدرّس",
+      "saving": "جارٍ الحفظ..."
+    },
     "InstructorStudentsPage": {
       "title": "طلابي",
       "description": "عرض جميع الطلاب المسجلين في دوراتك التدريبية",

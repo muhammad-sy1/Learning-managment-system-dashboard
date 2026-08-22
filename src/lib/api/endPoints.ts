@@ -148,6 +148,11 @@ const endpoints = {
   // instructor students
   getInstructorStudents: "/instructor/students",
   getInstructorDashboard: "/instructor/dashboard",
+
+  // instructor join requests (admin)
+  getPendingInstructors: "/admin/instructors/pending",
+  approveInstructor: (id: number | string) => `/admin/instructors/${id}/approve`,
+  rejectInstructor: (id: number | string) => `/admin/instructors/${id}/reject`,
   createLessonQuiz: (lessonId: string | number) => `/instructor/lessons/${lessonId}/quizzes`,
   createCourseQuiz: (courseId: string | number) => `/instructor/courses/${courseId}/quizzes`,
   getQuiz: (quizId: string | number) => `/instructor/quizzes/${quizId}`,

@@ -1460,6 +1460,34 @@
         "rejected": "Rejected"
       }
     },
+    "InstructorRequestsPage": {
+      "title": "Instructor Join Requests",
+      "description": "Review and respond to instructor applications",
+      "empty": "No pending instructor requests.",
+      "headers": {
+        "id": "ID",
+        "name": "Name",
+        "email": "Email",
+        "title": "Title",
+        "bio": "Bio",
+        "appliedAt": "Applied At",
+        "actions": "Actions"
+      },
+      "reviewAction": "Review",
+      "dialogTitle": "Review Instructor Request",
+      "dialogDescription": "Choose to approve or reject this instructor application.",
+      "approve": "Approve",
+      "reject": "Reject",
+      "rejectReasonLabel": "Rejection Reason",
+      "rejectReasonPlaceholder": "Enter the reason for rejection...",
+      "rejectReasonRequired": "Please provide a rejection reason.",
+      "sendBtn": "Send",
+      "approveSuccess": "Instructor approved successfully",
+      "rejectSuccess": "Instructor rejected successfully",
+      "approveError": "Failed to approve instructor",
+      "rejectError": "Failed to reject instructor",
+      "saving": "Saving..."
+    },
     "InstructorStudentsPage": {
       "title": "My Students",
       "description": "View all students enrolled in your courses",
